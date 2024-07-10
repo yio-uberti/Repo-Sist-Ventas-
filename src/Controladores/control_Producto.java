@@ -102,4 +102,19 @@ public class control_Producto {
 
         return producto;
     }
+
+//    //Metodo para obtener precio producto
+//    public Modelo_Producto obtenerPrecio(String codigoBarra) {
+//
+//        Modelo_Producto producto = new Modelo_Producto();
+//        String sql = "select precio_Actual from Producto where Cod_Barra = ?";
+//        
+//        try(Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)){
+//            
+//        }catch(SQLException e){
+//            System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
+//        }
+//        
+//        return producto;
+//    }
 }

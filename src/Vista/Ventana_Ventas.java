@@ -8,19 +8,18 @@ import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     String codBarra;
-    
+
     public Ventana_Ventas() {
         initComponents();
         setTitle("Facturacion");
-        this.setSize(new Dimension(900,650));
+        this.setSize(new Dimension(900, 650));
         this.setLocation(500, 100); // largo y altura de posicion
-        
+
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -28,11 +27,11 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         titCant = new javax.swing.JLabel();
         titCodigoBarra = new javax.swing.JLabel();
         titProducto = new javax.swing.JLabel();
-        cantProducto = new javax.swing.JTextField();
+        txtCantProducto = new javax.swing.JTextField();
         codigoBarra = new javax.swing.JTextField();
         nombreProducto = new javax.swing.JTextField();
-        subTotal = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtSubTotal = new javax.swing.JTextField();
+        jButtonBuscar = new javax.swing.JButton();
         titTotal = new javax.swing.JLabel();
         registroVentas = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -43,6 +42,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         titTipoPago = new javax.swing.JLabel();
         titVuelto = new javax.swing.JLabel();
         jButtonAñadir = new javax.swing.JToggleButton();
+        jButtonLimpiar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -70,9 +70,9 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         titProducto.setText("Producto");
         getContentPane().add(titProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, -1, -1));
 
-        cantProducto.setBackground(new java.awt.Color(255, 255, 255));
-        cantProducto.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(cantProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 50, 30));
+        txtCantProducto.setBackground(new java.awt.Color(255, 255, 255));
+        txtCantProducto.setForeground(new java.awt.Color(0, 0, 0));
+        getContentPane().add(txtCantProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 50, 30));
 
         codigoBarra.setBackground(new java.awt.Color(255, 255, 255));
         codigoBarra.setForeground(new java.awt.Color(0, 0, 0));
@@ -92,26 +92,27 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         });
         getContentPane().add(nombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 80, 180, 30));
 
-        subTotal.setBackground(new java.awt.Color(255, 255, 255));
-        subTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        subTotal.setForeground(new java.awt.Color(0, 0, 0));
-        subTotal.addActionListener(new java.awt.event.ActionListener() {
+        txtSubTotal.setBackground(new java.awt.Color(255, 255, 255));
+        txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        txtSubTotal.setForeground(new java.awt.Color(0, 0, 0));
+        txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtSubTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                subTotalActionPerformed(evt);
+                txtSubTotalActionPerformed(evt);
             }
         });
-        getContentPane().add(subTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 60, 250, 80));
+        getContentPane().add(txtSubTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 60, 250, 80));
 
-        jButton1.setBackground(new java.awt.Color(0, 204, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("BUSCAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBuscar.setBackground(new java.awt.Color(0, 204, 255));
+        jButtonBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonBuscar.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonBuscar.setText("BUSCAR");
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 190, 30));
+        getContentPane().add(jButtonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 190, 30));
 
         titTotal.setBackground(new java.awt.Color(255, 255, 255));
         titTotal.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
@@ -139,10 +140,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         tablaDescripcionVenta.setForeground(new java.awt.Color(0, 0, 0));
         tablaDescripcionVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Cantidad", "Detalle", "Precio Unitario", "Precio Total"
@@ -195,6 +193,12 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jButtonAñadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 180, 30));
 
+        jButtonLimpiar.setBackground(new java.awt.Color(204, 0, 0));
+        jButtonLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonLimpiar.setForeground(new java.awt.Color(0, 0, 0));
+        jButtonLimpiar.setText("Limpiar");
+        getContentPane().add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 120, 30));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -225,49 +229,90 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_nombreProductoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         //metodo que busca el producto en base al codigo de barra
-         Modelo_Producto pro = new Modelo_Producto();
+        Modelo_Producto pro = new Modelo_Producto();
         control_Producto cont = new control_Producto();
-        
-        if(codigoBarra.getText().equals("")){
+
+        if (codigoBarra.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Complete el codigo de barra");
             codigoBarra.setBackground(Color.red);
         } else {
             //recibe el valor ingresado x el usuario
-            if(cont.existeProducto(codigoBarra.getText().trim())){
+            if (cont.existeProducto(codigoBarra.getText().trim())) {
                 String codigo = codigoBarra.getText();
                 nombreProducto.setText(cont.buscarProducto(codigo).getNombre());
 //                PrecioActual.setText(String.valueOf(cont.buscarProducto(codigo).getPrecio_Actual()));
-           
+
             } else {
                 JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
 
-    private void subTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subTotalActionPerformed
+    private void txtSubTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSubTotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_subTotalActionPerformed
+    }//GEN-LAST:event_txtSubTotalActionPerformed
 
-    //Metodo para añadir productos a la venta
+    //Metodo para añadir productos a la tabla
     private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
-        int cant = 0;
+
+        // Obtener datos del producto desde los campos de texto o variables
+        String codBarra = this.codigoBarra.getText().trim();
+        int cantidad = Integer.parseInt(txtCantProducto.getText().trim());
+
+        //Obtener el precio del producto desde el controlador
+        control_Producto cont = new control_Producto();
+        Modelo_Producto prod = cont.buscarProducto(codBarra);
+
+        if (prod != null) {
+            String nombre = prod.getNombre();
+            double precio = prod.getPrecio_Actual();
+
+            // Calcular el subtotal (cantidad * precio)
+            double subtotal = cantidad * precio;
+
+            // Agregar el producto a la JTable
+            DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
+            model.addRow(new Object[]{cantidad, nombre, precio, subtotal});
+
+            // Limpiar los campos después de agregar
+            codigoBarra.setText("");
+            nombreProducto.setText("");
+            txtCantProducto.setText("");
+            
+            actualizarTotal();
+        } else {
+            JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
+        }
     }//GEN-LAST:event_jButtonAñadirActionPerformed
 
-    
+    private void actualizarTotal() {
+        double total = 0.0;
+        DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
+
+        // Recorrer las filas de la tabla y sumar los subtotales
+        for (int i = 0; i < model.getRowCount(); i++) {
+            double subtotal = (double) model.getValueAt(i, 3); // 3 es el índice de la columna de subtotales
+            total += subtotal;
+        }
+
+        // Actualizar el campo txtTotal con el valor calculado
+        txtSubTotal.setText(String.valueOf(total));
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField cantProducto;
     private javax.swing.JTextField codigoBarra;
-    private javax.swing.JButton jButton1;
     private javax.swing.JToggleButton jButtonAñadir;
+    private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButtonLimpiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nombreProducto;
     private javax.swing.JButton registroVentas;
-    private javax.swing.JTextField subTotal;
     public static javax.swing.JTable tablaDescripcionVenta;
     private javax.swing.JComboBox<String> tipoPago;
     private javax.swing.JLabel titCant;
@@ -276,8 +321,9 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel titTipoPago;
     private javax.swing.JLabel titTotal;
     private javax.swing.JLabel titVuelto;
+    private javax.swing.JTextField txtCantProducto;
+    private javax.swing.JTextField txtSubTotal;
     private javax.swing.JTextField vueltoVenta;
     // End of variables declaration//GEN-END:variables
-
 
 }
