@@ -282,6 +282,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             txtCantProducto.setText("");
             
             actualizarTotal();
+            
         } else {
             JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
         }
