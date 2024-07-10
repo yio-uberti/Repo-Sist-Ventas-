@@ -7,4 +7,4 @@ Funciones principales que si funcionan son:
   Alta de nueva Categoria
   Gestion de categoria
   Conexion con base de datos
-  
+  Parte de facturacion de ventas
