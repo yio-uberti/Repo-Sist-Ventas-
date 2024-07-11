@@ -1,14 +1,14 @@
 package Modelos;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class Modelo_Venta {
     
     private int id;
     private String Tipo;
     private String Hora;
-    private double monto;
+    private double montoKiosco;
+    private double montoComida;
+    private double montoPanaderia;
+    private double montoTotal;
 
     public int getId() {
         return id;
@@ -34,12 +34,36 @@ public class Modelo_Venta {
         this.Hora = Hora;
     }
 
-    public double getMonto() {
-        return monto;
+    public double getMontoKiosco() {
+        return montoKiosco;
     }
 
-    public void setMonto(double monto) {
-        this.monto = monto;
+    public void setMontoKiosco(double montoKiosco) {
+        this.montoKiosco = montoKiosco;
+    }
+
+    public double getMontoComida() {
+        return montoComida;
+    }
+
+    public void setMontoComida(double montoComida) {
+        this.montoComida = montoComida;
+    }
+
+    public double getMontoPanaderia() {
+        return montoPanaderia;
+    }
+
+    public void setMontoPanaderia(double montoPanaderia) {
+        this.montoPanaderia = montoPanaderia;
+    }
+    
+    public double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(double monto) {
+        this.montoTotal = monto;
     }
     
 }

@@ -108,7 +108,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(nombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 80, 180, 30));
 
         txtSubTotal.setBackground(new java.awt.Color(255, 255, 255));
-        txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         txtSubTotal.setForeground(new java.awt.Color(0, 0, 0));
         txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSubTotal.addActionListener(new java.awt.event.ActionListener() {
@@ -151,22 +151,23 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablaDescripcionVenta.setBackground(new java.awt.Color(255, 255, 255));
-        tablaDescripcionVenta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tablaDescripcionVenta.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tablaDescripcionVenta.setForeground(new java.awt.Color(0, 0, 0));
         tablaDescripcionVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Cantidad", "Detalle", "Precio Unitario", "Precio Total"
+                "Cant", "Detalle", "Tipo", "Precio Unitario", "Precio Total"
             }
         ));
         jScrollPane1.setViewportView(tablaDescripcionVenta);
         if (tablaDescripcionVenta.getColumnModel().getColumnCount() > 0) {
             tablaDescripcionVenta.getColumnModel().getColumn(0).setMaxWidth(55);
             tablaDescripcionVenta.getColumnModel().getColumn(1).setMaxWidth(280);
-            tablaDescripcionVenta.getColumnModel().getColumn(2).setMaxWidth(180);
+            tablaDescripcionVenta.getColumnModel().getColumn(2).setMaxWidth(200);
             tablaDescripcionVenta.getColumnModel().getColumn(3).setMaxWidth(180);
+            tablaDescripcionVenta.getColumnModel().getColumn(4).setMaxWidth(180);
         }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 420));
@@ -227,33 +228,62 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     //Metodo para registrar una venta 
     private void registroVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registroVentasActionPerformed
-        Modelo_Venta venta = new Modelo_Venta();
+        control_Producto cont_p = new control_Producto();
         control_Ventas cont = new control_Ventas();
 
         try {
-            //Definimos variables
-            double monto = Double.parseDouble(txtSubTotal.getText().trim());
-            String detalle = (String) tipoPago.getSelectedItem();
-            
-            //Formateamos para obtener la hora en tiempo real
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String hora = now.format(formatter);
+            double montoKiosco = 0;
+            double montoComida = 0;
+            double montoPanaderia = 0;
+            double montoTotal = 0;
 
-            //Llamamos al metodo para registar la Venta en la BD
-            cont.registarVenta(monto, hora, detalle);
-
-            JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
-
-            //Una vez finalizada la venta limpia los espacios para una nueva venta
+            // Recorrer la tabla para sumar los montos según el tipo de producto
             DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
-            model.setRowCount(0);
-            txtSubTotal.setText("");
-            
+            for (int i = 0; i < model.getRowCount(); i++) {
+                int cantidad =Integer.parseInt(model.getValueAt(i, 0).toString()); //cantidad
+                String tipoProducto = (String) model.getValueAt(i, 2);//tipo
+                double precioProducto = Double.parseDouble(model.getValueAt(i,3).toString());//precio
+
+                double montoProducto = precioProducto * cantidad;
+                
+                switch (tipoProducto) {
+                    case "Kiosco":
+                        montoKiosco += montoProducto;
+                        break;
+                    case "Comida":
+                        montoComida += montoProducto;
+                        break;
+                    case "Panadería":
+                        montoPanaderia += montoProducto;
+                        break;
+                }
+                
+                montoTotal += montoProducto;
+            }
+
+            String hora = java.time.LocalDateTime.now().toString();
+            String detalle = (String) tipoPago.getSelectedItem();
+
+            Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoTotal, hora, detalle);
+
+            if (venta.getId() != 0) {
+                JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
+                // Limpiar campos
+                model.setRowCount(0);
+                txtSubTotal.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al registrar la venta");
+                
+                model.setRowCount(0);
+                txtSubTotal.setText("");
+            }
+
+
         } catch (Exception e) {
-            //Tira un mensaje ne pantalla en caso de una excepcion
-            JOptionPane.showMessageDialog(this, "Error al registrar la venta: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al registrar la venta");
+            System.out.println(e.getMessage());
         }
+
     }//GEN-LAST:event_registroVentasActionPerformed
 
     private void tipoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoPagoActionPerformed
@@ -306,6 +336,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
         if (prod != null) {
             String nombre = prod.getNombre();
+            String tipo = prod.getTipo();
             double precio = prod.getPrecio_Actual();
 
             // Calcular el subtotal (cantidad * precio)
@@ -313,7 +344,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
             // Agregar el producto a la JTable
             DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
-            model.addRow(new Object[]{cantidad, nombre, precio, subtotal});
+            model.addRow(new Object[]{cantidad, nombre, tipo, precio, subtotal});
 
             // Limpiar los campos después de agregar
             codigoBarra.setText("");
@@ -341,7 +372,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
         // Recorrer las filas de la tabla y sumar los subtotales
         for (int i = 0; i < model.getRowCount(); i++) {
-            double subtotal = (double) model.getValueAt(i, 3); // 3 es el índice de la columna de subtotales
+            double subtotal = (double) model.getValueAt(i, 4); // 4 es el índice de la columna de subtotales
             total += subtotal;
         }
 

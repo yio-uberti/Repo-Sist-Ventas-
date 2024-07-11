@@ -4,20 +4,23 @@ public class Modelo_Producto {
      //Atributos
     private String Cod_barra;
     private String Nombre;
+    private String Tipo;
     private double Precio_Actual;
 
     //Constructor vacio
     public Modelo_Producto() {
         this.Cod_barra = "";
         this.Nombre = "";
+        this.Tipo = "";
         this.Precio_Actual = 0.0;
 
     }
 
     //Constructor sobrecargado
-    public Modelo_Producto(String Cod_barra, String Nombre, double Precio_Actual) {
+    public Modelo_Producto(String Cod_barra, String Nombre, String Tipo, double Precio_Actual) {
         this.Cod_barra = Cod_barra;
         this.Nombre = Nombre;
+        this.Tipo = Tipo;
         this.Precio_Actual = Precio_Actual;
     }
     
@@ -46,5 +49,15 @@ public class Modelo_Producto {
     public void setPrecio_Actual(double Precio_Actual) {
         this.Precio_Actual = Precio_Actual;
     }
+
+    public String getTipo() {
+        return Tipo;
+    }
+
+    public void setTipo(String Tipo) {
+        this.Tipo = Tipo;
+    }
+    
+    
 
 }

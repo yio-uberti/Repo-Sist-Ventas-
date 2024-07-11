@@ -216,13 +216,13 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
 
                 if (fila_point > -1) {
                     idCategoria = (int) model.getValueAt(fila_point, columna_point);
-                    EnviarDaosCategoriaSelecionada(idCategoria);
+                    EnviarDatosCategoriaSelecionada(idCategoria);
                 }
             }
         });
     }
 
-    private void EnviarDaosCategoriaSelecionada(int idCategoria) {
+    private void EnviarDatosCategoriaSelecionada(int idCategoria) {
         try {
             Connection con = Conexion.Conexion_BD.conectar();
             PreparedStatement pst = con.prepareStatement(

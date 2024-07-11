@@ -32,12 +32,14 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
 
         txtNombre = new javax.swing.JTextField();
         txtCodigoBarra = new javax.swing.JTextField();
-        txtPrecio = new javax.swing.JTextField();
+        txtTipo = new javax.swing.JTextField();
         titNombreProducto = new javax.swing.JLabel();
         titCodigoBarra = new javax.swing.JLabel();
-        titPrecio = new javax.swing.JLabel();
+        titTipo = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JLabel();
         botonIngresarProd = new javax.swing.JButton();
+        txtPrecio = new javax.swing.JTextField();
+        titPrecio = new javax.swing.JLabel();
         jLabel_Wallpaper = new javax.swing.JLabel();
 
         setClosable(true);
@@ -61,15 +63,15 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txtCodigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 190, -1));
 
-        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
-        txtPrecio.setForeground(new java.awt.Color(0, 0, 0));
-        txtPrecio.setDisabledTextColor(new java.awt.Color(255, 255, 255));
-        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+        txtTipo.setBackground(new java.awt.Color(255, 255, 255));
+        txtTipo.setForeground(new java.awt.Color(0, 0, 0));
+        txtTipo.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        txtTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPrecioActionPerformed(evt);
+                txtTipoActionPerformed(evt);
             }
         });
-        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 190, -1));
+        getContentPane().add(txtTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 190, -1));
 
         titNombreProducto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         titNombreProducto.setForeground(new java.awt.Color(255, 255, 255));
@@ -81,10 +83,10 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         titCodigoBarra.setText("Codigo Barra");
         getContentPane().add(titCodigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, -1, -1));
 
-        titPrecio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        titPrecio.setForeground(new java.awt.Color(255, 255, 255));
-        titPrecio.setText("Precio");
-        getContentPane().add(titPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, -1, 20));
+        titTipo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        titTipo.setForeground(new java.awt.Color(255, 255, 255));
+        titTipo.setText("Tipo");
+        getContentPane().add(titTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, -1, 20));
 
         txtTitulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTitulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -100,7 +102,22 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
                 botonIngresarProdActionPerformed(evt);
             }
         });
-        getContentPane().add(botonIngresarProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 190, 40));
+        getContentPane().add(botonIngresarProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 210, 190, 40));
+
+        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecio.setForeground(new java.awt.Color(0, 0, 0));
+        txtPrecio.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 190, -1));
+
+        titPrecio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        titPrecio.setForeground(new java.awt.Color(255, 255, 255));
+        titPrecio.setText("Precio");
+        getContentPane().add(titPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, -1, 20));
 
         jLabel_Wallpaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo3.jpg"))); // NOI18N
         getContentPane().add(jLabel_Wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 270));
@@ -112,9 +129,9 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodigoBarraActionPerformed
 
-    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPrecioActionPerformed
+    }//GEN-LAST:event_txtTipoActionPerformed
 
     private void botonIngresarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIngresarProdActionPerformed
         // Instancias de otras clases:
@@ -134,6 +151,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
                     
                     pro.setCod_barra(txtCodigoBarra.getText().trim());
                     pro.setNombre(txtNombre.getText().trim());
+                    pro.setTipo(txtTipo.getText().trim());
                     String precioTXT = "";
                     double Precio = 0.00;
                     precioTXT = txtPrecio.getText().trim();
@@ -159,9 +177,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
                     //Registrar producto
                         if(cont.guardar(pro)){
                             JOptionPane.showMessageDialog(null, "Producto Registrado");
-                            txtCodigoBarra.setBackground(Color.GREEN);
-                            txtNombre.setBackground(Color.GREEN);
-                            txtPrecio.setBackground(Color.GREEN);
                         } else {
                             JOptionPane.showMessageDialog(null, "Error al Guardar");
                         }
@@ -179,15 +194,21 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_botonIngresarProdActionPerformed
 
+    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonIngresarProd;
     private javax.swing.JLabel jLabel_Wallpaper;
     private javax.swing.JLabel titCodigoBarra;
     private javax.swing.JLabel titNombreProducto;
     private javax.swing.JLabel titPrecio;
+    private javax.swing.JLabel titTipo;
     private javax.swing.JTextField txtCodigoBarra;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtTipo;
     private javax.swing.JLabel txtTitulo;
     // End of variables declaration//GEN-END:variables
 
@@ -195,6 +216,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
     private void Limpiar(){
         txtCodigoBarra.setText("");
         txtNombre.setText("");
-        txtPrecio.setText("");
+        txtTipo.setText("");
     }
 }

@@ -17,10 +17,11 @@ public class control_Producto {
         cn = Conexion.Conexion_BD.conectar();
 
         try {
-            PreparedStatement consulta = cn.prepareStatement("insert into Producto values(?,?,?)");
+            PreparedStatement consulta = cn.prepareStatement("insert into Producto values(?,?,?,?)");
             consulta.setString(1, objeto.getCod_barra());//Cod_Barra
             consulta.setString(2, objeto.getNombre());
-            consulta.setDouble(3, objeto.getPrecio_Actual());
+            consulta.setString(3, objeto.getTipo());
+            consulta.setDouble(4, objeto.getPrecio_Actual());
 
             if (consulta.executeUpdate() > 0) {
                 respuesta = true;
@@ -62,7 +63,7 @@ public class control_Producto {
     //metodo para buscar un producto 
     public Modelo_Producto buscarProducto(String codigoBarra) {
         Modelo_Producto producto = new Modelo_Producto();
-        String sql = "select nombre , precio_Actual from Producto where Cod_barra = ?";
+        String sql = "select nombre , precio_Actual, tipo from Producto where Cod_barra = ?";
 
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
 
@@ -72,8 +73,11 @@ public class control_Producto {
             if (rs.next()) {
                 String nombre = rs.getString("nombre");
                 double precio = rs.getDouble("precio_Actual");
+                String tipo = rs.getString("tipo");
+
                 producto.setNombre(nombre);
                 producto.setPrecio_Actual(precio);
+                producto.setTipo(tipo);
             }
         } catch (SQLException e) {
             System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
@@ -103,18 +107,4 @@ public class control_Producto {
         return producto;
     }
 
-//    //Metodo para obtener precio producto
-//    public Modelo_Producto obtenerPrecio(String codigoBarra) {
-//
-//        Modelo_Producto producto = new Modelo_Producto();
-//        String sql = "select precio_Actual from Producto where Cod_Barra = ?";
-//        
-//        try(Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)){
-//            
-//        }catch(SQLException e){
-//            System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
-//        }
-//        
-//        return producto;
-//    }
 }
