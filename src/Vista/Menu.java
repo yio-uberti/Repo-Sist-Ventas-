@@ -43,6 +43,7 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu_nuevo");
+        setType(java.awt.Window.Type.POPUP);
 
         jMenuBarra.setBackground(new java.awt.Color(0, 102, 153));
         jMenuBarra.setForeground(new java.awt.Color(255, 255, 255));

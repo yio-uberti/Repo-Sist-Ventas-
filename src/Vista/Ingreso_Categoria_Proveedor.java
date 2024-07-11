@@ -4,7 +4,9 @@ import Controladores.control_Cat_Proveedor;
 import Modelos.Modelo_categoria;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Ingreso_Categoria_Proveedor extends javax.swing.JInternalFrame {
 
@@ -12,6 +14,18 @@ public class Ingreso_Categoria_Proveedor extends javax.swing.JInternalFrame {
         initComponents();
         setTitle("Ingreso de Categoria-Proveedor");
         this.setSize(new Dimension(550,300));
+        // Centrar el JInternalFrame en su contenedor principal
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JDesktopPane desktopPane = getDesktopPane();
+                if (desktopPane != null) {
+                    Dimension desktopSize = desktopPane.getSize();
+                    Dimension jInternalFrameSize = getSize();
+                    setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                                (desktopSize.height - jInternalFrameSize.height) / 2);
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

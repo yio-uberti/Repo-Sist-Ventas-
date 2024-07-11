@@ -4,7 +4,9 @@ import Controladores.control_Producto;
 import Modelos.Modelo_Producto;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Gestion_Producto extends javax.swing.JInternalFrame {
 
@@ -12,6 +14,18 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         initComponents();
         setTitle("Actualizacion o Gestion de Productos");
         this.setSize(new Dimension(740, 280));
+        // Centrar el JInternalFrame en su contenedor principal
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JDesktopPane desktopPane = getDesktopPane();
+                if (desktopPane != null) {
+                    Dimension desktopSize = desktopPane.getSize();
+                    Dimension jInternalFrameSize = getSize();
+                    setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                                (desktopSize.height - jInternalFrameSize.height) / 2);
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

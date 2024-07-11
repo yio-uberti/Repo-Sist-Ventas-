@@ -11,12 +11,25 @@ import javax.swing.table.*;
 public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
 
     public int idCategoria = 0;
-    
+
     public Gestion_Categoria_Proveedor() {
-       initComponents();
+        initComponents();
         setTitle("Gestion de Categoria-Proveedor");
-        this.setSize(new Dimension(500,350));
-       
+        this.setSize(new Dimension(500, 350));
+
+        // Centrar el JInternalFrame en su contenedor principal
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JDesktopPane desktopPane = getDesktopPane();
+                if (desktopPane != null) {
+                    Dimension desktopSize = desktopPane.getSize();
+                    Dimension jInternalFrameSize = getSize();
+                    setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                            (desktopSize.height - jInternalFrameSize.height) / 2);
+                }
+            }
+        });
+
         this.cargarCategoriaProveedor();
     }
 
@@ -133,18 +146,18 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
 
     private void jBotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonEliminarActionPerformed
         //Eliminamos la categoria seleccionada
-        if(!txtDescProveedor.getText().isEmpty()){
+        if (!txtDescProveedor.getText().isEmpty()) {
             Modelo_categoria catProveedor = new Modelo_categoria();
             control_Cat_Proveedor cont = new control_Cat_Proveedor();
-            
+
             catProveedor.setDescripcion(txtDescProveedor.getText().trim());
-            if(!cont.eliminar(idCategoria)){
+            if (!cont.eliminar(idCategoria)) {
                 JOptionPane.showMessageDialog(null, "Proveedor eliminado");
                 txtDescProveedor.setText("");
                 this.cargarCategoriaProveedor();
-           } else {
+            } else {
                 JOptionPane.showMessageDialog(null, "Error al eliminar Proveedor");
-           }
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Seleecione un Proveedor");
         }
@@ -166,67 +179,65 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     //Metodo para mostrar provedores registrados
-    private void cargarCategoriaProveedor(){
+    private void cargarCategoriaProveedor() {
         Connection con = Conexion.Conexion_BD.conectar();
         DefaultTableModel model = new DefaultTableModel();
         String sql = "select id, descripcion from Categoria ";
         Statement st;
-        
+
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             Gestion_Categoria_Proveedor.jTableCategoria = new JTable(model);
             Gestion_Categoria_Proveedor.jScrollPane1.setViewportView(Gestion_Categoria_Proveedor.jTableCategoria);
-            
+
             model.addColumn("id");
             model.addColumn("Nombre Proveedor");
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 Object fila[] = new Object[2];
-                
-                for(int i = 0; i < 2; i++){
+
+                for (int i = 0; i < 2; i++) {
                     fila[i] = rs.getObject(i + 1);
                 }
                 model.addRow(fila);
             }
             con.close();
-            
+
         } catch (Exception e) {
             System.out.println("Error al mostrar la tabla categorias" + e);
         }
-        
-        jTableCategoria.addMouseListener(new MouseAdapter(){
+
+        jTableCategoria.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 int fila_point = jTableCategoria.rowAtPoint(e.getPoint());
                 int columna_point = 0;
-                
-                if(fila_point > -1){
-                    idCategoria = (int) model.getValueAt(fila_point,columna_point);
+
+                if (fila_point > -1) {
+                    idCategoria = (int) model.getValueAt(fila_point, columna_point);
                     EnviarDaosCategoriaSelecionada(idCategoria);
                 }
             }
         });
     }
-    
+
     private void EnviarDaosCategoriaSelecionada(int idCategoria) {
         try {
             Connection con = Conexion.Conexion_BD.conectar();
             PreparedStatement pst = con.prepareStatement(
-            "select * from Categoria where id = '" + idCategoria + "'");
+                    "select * from Categoria where id = '" + idCategoria + "'");
             ResultSet rs = pst.executeQuery();
-            
-            if(rs.next()){
+
+            if (rs.next()) {
                 txtDescProveedor.setText(rs.getString("descripcion"));
             }
             con.close();
-            
+
         } catch (Exception e) {
             System.out.println("Error al selecionar categoria" + e);
         }
-        
+
     }
 
 }
-
-

@@ -1,12 +1,18 @@
 package Vista;
 
 import Controladores.control_Producto;
+import Controladores.control_Ventas;
 import Modelos.Modelo_Producto;
+import Modelos.Modelo_Venta;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
@@ -16,7 +22,18 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         initComponents();
         setTitle("Facturacion");
         this.setSize(new Dimension(900, 650));
-        this.setLocation(500, 100); // largo y altura de posicion
+        // Centrar el JInternalFrame en su contenedor principal
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JDesktopPane desktopPane = getDesktopPane();
+                if (desktopPane != null) {
+                    Dimension desktopSize = desktopPane.getSize();
+                    Dimension jInternalFrameSize = getSize();
+                    setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                            (desktopSize.height - jInternalFrameSize.height) / 2);
+                }
+            }
+        });
 
     }
 
@@ -37,10 +54,8 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaDescripcionVenta = new javax.swing.JTable();
-        vueltoVenta = new javax.swing.JTextField();
         tipoPago = new javax.swing.JComboBox<>();
         titTipoPago = new javax.swing.JLabel();
-        titVuelto = new javax.swing.JLabel();
         jButtonAñadir = new javax.swing.JToggleButton();
         jButtonLimpiar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -131,7 +146,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 registroVentasActionPerformed(evt);
             }
         });
-        getContentPane().add(registroVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 370, 160, 110));
+        getContentPane().add(registroVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 300, 160, 110));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -158,11 +173,8 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 630, 420));
 
-        vueltoVenta.setBackground(new java.awt.Color(255, 255, 255));
-        vueltoVenta.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(vueltoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 280, 150, 50));
-
         tipoPago.setBackground(new java.awt.Color(255, 255, 255));
+        tipoPago.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tipoPago.setForeground(new java.awt.Color(0, 0, 0));
         tipoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
         tipoPago.addActionListener(new java.awt.event.ActionListener() {
@@ -170,17 +182,12 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 tipoPagoActionPerformed(evt);
             }
         });
-        getContentPane().add(tipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 210, 150, -1));
+        getContentPane().add(tipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 230, 150, -1));
 
-        titTipoPago.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        titTipoPago.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titTipoPago.setForeground(new java.awt.Color(0, 0, 0));
         titTipoPago.setText("Tipo de Pago:");
-        getContentPane().add(titTipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 170, 150, 20));
-
-        titVuelto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        titVuelto.setForeground(new java.awt.Color(0, 0, 0));
-        titVuelto.setText("Vuelto:");
-        getContentPane().add(titVuelto, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 250, 150, 20));
+        getContentPane().add(titTipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, 150, 20));
 
         jButtonAñadir.setBackground(new java.awt.Color(51, 255, 255));
         jButtonAñadir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -197,6 +204,11 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jButtonLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButtonLimpiar.setForeground(new java.awt.Color(0, 0, 0));
         jButtonLimpiar.setText("Limpiar");
+        jButtonLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLimpiarActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 120, 30));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -213,8 +225,35 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Metodo para registrar una venta 
     private void registroVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registroVentasActionPerformed
-        // boton para finalizar e ingresar una venta al sistema
+        Modelo_Venta venta = new Modelo_Venta();
+        control_Ventas cont = new control_Ventas();
+
+        try {
+            //Definimos variables
+            double monto = Double.parseDouble(txtSubTotal.getText().trim());
+            String detalle = (String) tipoPago.getSelectedItem();
+            
+            //Formateamos para obtener la hora en tiempo real
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String hora = now.format(formatter);
+
+            //Llamamos al metodo para registar la Venta en la BD
+            cont.registarVenta(monto, hora, detalle);
+
+            JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
+
+            //Una vez finalizada la venta limpia los espacios para una nueva venta
+            DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
+            model.setRowCount(0);
+            txtSubTotal.setText("");
+            
+        } catch (Exception e) {
+            //Tira un mensaje ne pantalla en caso de una excepcion
+            JOptionPane.showMessageDialog(this, "Error al registrar la venta: " + e.getMessage());
+        }
     }//GEN-LAST:event_registroVentasActionPerformed
 
     private void tipoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoPagoActionPerformed
@@ -229,8 +268,8 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_nombreProductoActionPerformed
 
+    //metodo que busca el producto en base al codigo de barra
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        //metodo que busca el producto en base al codigo de barra
         Modelo_Producto pro = new Modelo_Producto();
         control_Producto cont = new control_Producto();
 
@@ -280,14 +319,22 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             codigoBarra.setText("");
             nombreProducto.setText("");
             txtCantProducto.setText("");
-            
+
             actualizarTotal();
-            
+
         } else {
             JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
         }
     }//GEN-LAST:event_jButtonAñadirActionPerformed
 
+    //metodo para limpiar o cancelar venta
+    private void jButtonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimpiarActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
+        model.setRowCount(0);
+        txtSubTotal.setText("");
+    }//GEN-LAST:event_jButtonLimpiarActionPerformed
+
+    //metodo privado, actulizacion del monto total de venta
     private void actualizarTotal() {
         double total = 0.0;
         DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
@@ -321,10 +368,8 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel titProducto;
     private javax.swing.JLabel titTipoPago;
     private javax.swing.JLabel titTotal;
-    private javax.swing.JLabel titVuelto;
     private javax.swing.JTextField txtCantProducto;
     private javax.swing.JTextField txtSubTotal;
-    private javax.swing.JTextField vueltoVenta;
     // End of variables declaration//GEN-END:variables
 
 }

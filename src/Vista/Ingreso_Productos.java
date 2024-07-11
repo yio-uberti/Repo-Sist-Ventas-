@@ -12,6 +12,18 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
     public Ingreso_Productos() {
         initComponents();
         setTitle("Ingreso de Producto");
+        // Centrar el JInternalFrame en su contenedor principal
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JDesktopPane desktopPane = getDesktopPane();
+                if (desktopPane != null) {
+                    Dimension desktopSize = desktopPane.getSize();
+                    Dimension jInternalFrameSize = getSize();
+                    setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                                (desktopSize.height - jInternalFrameSize.height) / 2);
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
