@@ -22,7 +22,7 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
                     Dimension desktopSize = desktopPane.getSize();
                     Dimension jInternalFrameSize = getSize();
                     setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
-                                (desktopSize.height - jInternalFrameSize.height) / 2);
+                            (desktopSize.height - jInternalFrameSize.height) / 2);
                 }
             }
         });
@@ -42,9 +42,11 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         titPrecioNuevo = new javax.swing.JLabel();
         titTitulo = new javax.swing.JLabel();
         titPreguntaActualizacion = new javax.swing.JLabel();
+        titEliminar = new javax.swing.JLabel();
         botonSi_ = new javax.swing.JButton();
         botonNo_ = new javax.swing.JButton();
         botonBuscar_ = new javax.swing.JButton();
+        botonEliminar = new javax.swing.JButton();
         jLabel_wallpaper = new javax.swing.JLabel();
 
         setClosable(true);
@@ -107,7 +109,7 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         titTitulo.setBackground(new java.awt.Color(0, 0, 0));
         titTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titTitulo.setForeground(new java.awt.Color(255, 255, 255));
-        titTitulo.setText("Actualizacion de Precio");
+        titTitulo.setText("Gestion de producto");
         getContentPane().add(titTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
 
         titPreguntaActualizacion.setBackground(new java.awt.Color(0, 0, 0));
@@ -115,6 +117,11 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         titPreguntaActualizacion.setForeground(new java.awt.Color(255, 255, 255));
         titPreguntaActualizacion.setText("¿Desea actualizar el precio?");
         getContentPane().add(titPreguntaActualizacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, -1));
+
+        titEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        titEliminar.setForeground(new java.awt.Color(255, 255, 255));
+        titEliminar.setText("¿Desea eliminar el producto?");
+        getContentPane().add(titEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, -1, -1));
 
         botonSi_.setBackground(new java.awt.Color(0, 255, 0));
         botonSi_.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -148,7 +155,18 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
                 botonBuscar_ActionPerformed(evt);
             }
         });
-        getContentPane().add(botonBuscar_, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 150, 50));
+        getContentPane().add(botonBuscar_, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, 150, 50));
+
+        botonEliminar.setBackground(new java.awt.Color(153, 0, 0));
+        botonEliminar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        botonEliminar.setForeground(new java.awt.Color(0, 0, 0));
+        botonEliminar.setText("ELIMINAR");
+        botonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEliminarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(botonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 160, 50));
 
         jLabel_wallpaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo3.jpg"))); // NOI18N
         jLabel_wallpaper.setText("jLabel1");
@@ -161,7 +179,7 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActualActionPerformed
 
-    //Boton para limapiar los campos en caso de no querer actualizar precio
+    //Boton para limpiar los campos en caso de no querer actualizar precio
     private void botonNo_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNo_ActionPerformed
 
         Modelo_Producto pro = new Modelo_Producto();
@@ -198,12 +216,12 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
         } else if (!txtCodigoBarra.getText().isEmpty() && !txtNombreProducto.getText().isEmpty() && !txtPrecioActual.getText().isEmpty() && !txtPrecioNuevo.getText().isEmpty()) {
             String codigo = txtCodigoBarra.getText();
             // metodo para chequear si ingreso un numero valido el usuario
-            
+
             try {
                 String input = txtPrecioNuevo.getText();
                 nuevoPrecio = Double.parseDouble(input.replace(",", "."));
                 cont.cambioPrecio(codigo, nuevoPrecio);
-                
+
             } catch (NumberFormatException e) {
 
                 JOptionPane.showMessageDialog(null, "Ingresa un valor numérico válido.");
@@ -241,13 +259,33 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_botonBuscar_ActionPerformed
 
+    //Boton Elimnar producto
+    private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
+
+        String codigoBarra = this.txtCodigoBarra.getText().trim();
+        control_Producto cont = new control_Producto();
+        boolean exito = cont.eliminar(codigoBarra);// Llamar al método eliminar del controlador
+
+        // Mostrar un mensaje al usuario indicando si la eliminación fue exitosa o no
+        if (exito) {
+            JOptionPane.showMessageDialog(this, "Producto eliminado exitosamente");
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el producto");
+        }
+
+        this.Limpiar();
+    }//GEN-LAST:event_botonEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonBuscar_;
+    private javax.swing.JButton botonEliminar;
     private javax.swing.JButton botonNo_;
     private javax.swing.JButton botonSi_;
     private javax.swing.JLabel jLabel_wallpaper;
     private javax.swing.JLabel titCodigoBarra;
+    private javax.swing.JLabel titEliminar;
     private javax.swing.JLabel titNombreProducto;
     private javax.swing.JLabel titPrecioActual;
     private javax.swing.JLabel titPrecioNuevo;

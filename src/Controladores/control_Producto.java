@@ -106,5 +106,23 @@ public class control_Producto {
 
         return producto;
     }
+    
+    public boolean eliminar(String codigoBarra){
+    
+        Modelo_Producto producto = new Modelo_Producto();
+        String sql = "delete from Producto where Cod_Barra = ?";
+        
+        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
+            
+            pst.setString(1, codigoBarra);
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar Producto por código de barras: " + e.getMessage());
+            return false;
+        }
+
+    }
 
 }

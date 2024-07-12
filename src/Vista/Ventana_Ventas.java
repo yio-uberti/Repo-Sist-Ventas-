@@ -235,6 +235,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             double montoKiosco = 0;
             double montoComida = 0;
             double montoPanaderia = 0;
+            double montoPostre = 0;
             double montoTotal = 0;
 
             // Recorrer la tabla para sumar los montos según el tipo de producto
@@ -256,15 +257,19 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                     case "Panadería":
                         montoPanaderia += montoProducto;
                         break;
+                    case "Postre":
+                        montoPostre += montoProducto;
+                        break;    
                 }
                 
                 montoTotal += montoProducto;
             }
-
+            
+            //formateo de datos
             String hora = java.time.LocalDateTime.now().toString();
             String detalle = (String) tipoPago.getSelectedItem();
 
-            Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoTotal, hora, detalle);
+            Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, hora, detalle);
 
             if (venta.getId() != 0) {
                 JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
