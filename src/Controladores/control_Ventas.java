@@ -1,12 +1,11 @@
 package Controladores;
 
 import Modelos.Modelo_Venta;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class control_Ventas {
 
@@ -40,17 +39,17 @@ public class control_Ventas {
                     }
                 }
             }
-            
+
             System.out.println("Resgitro de venta Exitoso");
-            
+
         } catch (Exception e) {
             System.out.println("Error al registrar la venta: " + e.getMessage());
         }
         return venta;
     }
 
-    public Modelo_Venta buscarSegunTipo(String detalle) {
-        Modelo_Venta venta = new Modelo_Venta();
+    public List<Modelo_Venta> buscarSegunTipo(String detalle) {
+        List<Modelo_Venta> listaVenta = new ArrayList<>();
         String sql = "select detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta from Venta where detalle = ?";
 
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
@@ -58,25 +57,36 @@ public class control_Ventas {
             pst.setString(1, detalle); // Establecer el valor del parámetro
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Ajusta el patrón según tu formato de fecha y hora en la BD
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM HH:mm");
+
+            while (rs.next()) {
                 // Obtener los valores de las columnas del ResultSet y establecerlos en el modelo
+                Modelo_Venta venta = new Modelo_Venta();
                 venta.setTipo(rs.getString("detalle"));
                 venta.setMontoKiosco(rs.getDouble("montoKiosco"));
-                venta.setMontoComida(rs.getDouble("montoComida"));
                 venta.setMontoPanaderia(rs.getDouble("montoPanaderia"));
+                venta.setMontoComida(rs.getDouble("montoComida"));
                 venta.setMontoPostre(rs.getDouble("montoPostre"));
                 venta.setMontoTotal(rs.getDouble("montoTotal"));
                 venta.setHora(rs.getString("horaVenta"));
 
+                //Formateo de hora
+                String horaVenta = rs.getString("horaVenta");
+                LocalDateTime dateTime = LocalDateTime.parse(horaVenta, inputFormatter);
+                String formattedHoraVenta = dateTime.format(outputFormatter);
+                venta.setHora(formattedHoraVenta);
+
+                listaVenta.add(venta);
             }
-            
+
             System.out.println("Busqueda exitosa");
-            
+
         } catch (Exception e) {
 
             System.out.println("Error al buscar venta por Tipo de pago: " + e.getMessage());
         }
 
-        return venta;
+        return listaVenta;
     }
 }

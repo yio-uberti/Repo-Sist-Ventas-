@@ -32,11 +32,11 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
 
         txtNombre = new javax.swing.JTextField();
         txtCodigoBarra = new javax.swing.JTextField();
-        txtTipo = new javax.swing.JTextField();
         titNombreProducto = new javax.swing.JLabel();
         titCodigoBarra = new javax.swing.JLabel();
         titTipo = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JLabel();
+        comboTipoProducto = new javax.swing.JComboBox<>();
         botonIngresarProd = new javax.swing.JButton();
         txtPrecio = new javax.swing.JTextField();
         titPrecio = new javax.swing.JLabel();
@@ -63,16 +63,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txtCodigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 190, -1));
 
-        txtTipo.setBackground(new java.awt.Color(255, 255, 255));
-        txtTipo.setForeground(new java.awt.Color(0, 0, 0));
-        txtTipo.setDisabledTextColor(new java.awt.Color(255, 255, 255));
-        txtTipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoActionPerformed(evt);
-            }
-        });
-        getContentPane().add(txtTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 190, -1));
-
         titNombreProducto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         titNombreProducto.setForeground(new java.awt.Color(255, 255, 255));
         titNombreProducto.setText("Nombre");
@@ -92,6 +82,11 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         txtTitulo.setForeground(new java.awt.Color(255, 255, 255));
         txtTitulo.setText("Ingreso de Productos");
         getContentPane().add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
+        comboTipoProducto.setBackground(new java.awt.Color(255, 255, 255));
+        comboTipoProducto.setForeground(new java.awt.Color(0, 0, 0));
+        comboTipoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kiosco", "Panaderia", "Comida", "Postre" }));
+        getContentPane().add(comboTipoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 190, -1));
 
         botonIngresarProd.setBackground(new java.awt.Color(0, 204, 204));
         botonIngresarProd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -129,10 +124,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodigoBarraActionPerformed
 
-    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoActionPerformed
-
     private void botonIngresarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIngresarProdActionPerformed
         // Instancias de otras clases:
         Modelo_Producto pro = new Modelo_Producto();
@@ -151,7 +142,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
                     
                     pro.setCod_barra(txtCodigoBarra.getText().trim());
                     pro.setNombre(txtNombre.getText().trim());
-                    pro.setTipo(txtTipo.getText().trim());
+                    pro.setTipo(comboTipoProducto.getSelectedItem().toString());
                     String precioTXT = "";
                     double Precio = 0.00;
                     precioTXT = txtPrecio.getText().trim();
@@ -200,6 +191,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonIngresarProd;
+    private javax.swing.JComboBox<String> comboTipoProducto;
     private javax.swing.JLabel jLabel_Wallpaper;
     private javax.swing.JLabel titCodigoBarra;
     private javax.swing.JLabel titNombreProducto;
@@ -208,7 +200,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtCodigoBarra;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
-    private javax.swing.JTextField txtTipo;
     private javax.swing.JLabel txtTitulo;
     // End of variables declaration//GEN-END:variables
 
@@ -216,6 +207,6 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
     private void Limpiar(){
         txtCodigoBarra.setText("");
         txtNombre.setText("");
-        txtTipo.setText("");
+        txtPrecio.setText("");
     }
 }

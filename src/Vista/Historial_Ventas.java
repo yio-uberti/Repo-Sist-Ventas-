@@ -1,16 +1,15 @@
 package Vista;
 
 import Controladores.control_Ventas;
-import java.awt.Dimension;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import Modelos.Modelo_Venta;
+import java.awt.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import javax.swing.JDesktopPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
+import java.util.List;
 import java.util.Date;
 import java.text.ParseException;
 
@@ -96,7 +95,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Id", "Detalle/Tipo de Pago", "Kiosco", "Panaderia", "Comida", "Monto", "Hora y Fecha "
+                "Detalle/Tipo de Pago", "Kiosco", "Panaderia", "Comida", "Postre", "Monto", "Hora y Fecha "
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -120,17 +119,19 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jTableDescripcionHistorial.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTableDescripcionHistorial.getColumnModel().getColumnCount() > 0) {
             jTableDescripcionHistorial.getColumnModel().getColumn(0).setResizable(false);
+            jTableDescripcionHistorial.getColumnModel().getColumn(0).setPreferredWidth(250);
             jTableDescripcionHistorial.getColumnModel().getColumn(1).setResizable(false);
-            jTableDescripcionHistorial.getColumnModel().getColumn(1).setPreferredWidth(250);
+            jTableDescripcionHistorial.getColumnModel().getColumn(1).setPreferredWidth(200);
             jTableDescripcionHistorial.getColumnModel().getColumn(2).setResizable(false);
-            jTableDescripcionHistorial.getColumnModel().getColumn(2).setPreferredWidth(250);
+            jTableDescripcionHistorial.getColumnModel().getColumn(2).setPreferredWidth(200);
             jTableDescripcionHistorial.getColumnModel().getColumn(3).setResizable(false);
-            jTableDescripcionHistorial.getColumnModel().getColumn(3).setPreferredWidth(250);
+            jTableDescripcionHistorial.getColumnModel().getColumn(3).setPreferredWidth(200);
             jTableDescripcionHistorial.getColumnModel().getColumn(4).setResizable(false);
-            jTableDescripcionHistorial.getColumnModel().getColumn(4).setPreferredWidth(250);
+            jTableDescripcionHistorial.getColumnModel().getColumn(4).setPreferredWidth(200);
             jTableDescripcionHistorial.getColumnModel().getColumn(5).setResizable(false);
-            jTableDescripcionHistorial.getColumnModel().getColumn(5).setPreferredWidth(250);
+            jTableDescripcionHistorial.getColumnModel().getColumn(5).setPreferredWidth(200);
             jTableDescripcionHistorial.getColumnModel().getColumn(6).setResizable(false);
+            jTableDescripcionHistorial.getColumnModel().getColumn(6).setPreferredWidth(200);
         }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 540));
@@ -164,8 +165,11 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         control_Ventas cont = new control_Ventas();
         String detalle = (String) jTipodePago.getSelectedItem();
 
-        if (cont.buscarSegunTipo(detalle) != null) {
-            JOptionPane.showMessageDialog(this, "Ventas encontradas con Exito");
+        List<Modelo_Venta> ventas = cont.buscarSegunTipo(detalle);
+
+        if (!ventas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
+            actualizarTabla(ventas);
         } else {
             JOptionPane.showMessageDialog(this, "Ventas no encontradas");
         }
@@ -185,10 +189,10 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             // Agregar columnas al modelo
 //            model.addColumn("ID");
             model.addColumn("Detalle");
-            model.addColumn("Monto Kiosco");
-            model.addColumn("Monto Comida");
-            model.addColumn("Monto Panadería");
-            model.addColumn("Monto Postre");
+            model.addColumn("Kiosco");
+            model.addColumn("Panaderia");
+            model.addColumn("Comida");
+            model.addColumn("Postre");
             model.addColumn("Monto");
             model.addColumn("Hora de Venta");
 
@@ -202,8 +206,8 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 //                row[0] = rs.getInt("id");
                 row[0] = rs.getString("detalle");
                 row[1] = rs.getDouble("montoKiosco");
-                row[2] = rs.getDouble("montoComida");
-                row[3] = rs.getDouble("montoPanaderia");
+                row[2] = rs.getDouble("montoPanaderia");
+                row[3] = rs.getDouble("montoComida");
                 row[4] = rs.getDouble("montoPostre");
                 row[5] = rs.getDouble("montoTotal");
 
@@ -242,4 +246,23 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel titBuscador;
     private javax.swing.JLabel titPrincipal;
     // End of variables declaration//GEN-END:variables
+
+    private void actualizarTabla(List<Modelo_Venta> ventas) {
+        DefaultTableModel model = (DefaultTableModel) jTableDescripcionHistorial.getModel();
+        model.setRowCount(0); // Limpiar la tabla
+
+        for (Modelo_Venta venta : ventas) {
+            Object[] row = new Object[7];
+            row[0] = venta.getTipo();
+            row[1] = venta.getMontoKiosco();
+            row[2] = venta.getMontoPanaderia();
+            row[3] = venta.getMontoComida();
+            row[4] = venta.getMontoPostre();
+            row[5] = venta.getMontoTotal();
+            row[6] = venta.getHora();
+            
+            model.addRow(row);
+        }
+    }
+
 }

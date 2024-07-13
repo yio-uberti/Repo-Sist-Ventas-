@@ -254,7 +254,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                     case "Comida":
                         montoComida += montoProducto;
                         break;
-                    case "Panadería":
+                    case "Panaderia":
                         montoPanaderia += montoProducto;
                         break;
                     case "Postre":

@@ -148,11 +148,11 @@
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="7" rowCount="0">
-                    <Column editable="false" title="Id" type="java.lang.Object"/>
                     <Column editable="false" title="Detalle/Tipo de Pago" type="java.lang.Object"/>
                     <Column editable="false" title="Kiosco" type="java.lang.Object"/>
                     <Column editable="false" title="Panaderia" type="java.lang.Object"/>
                     <Column editable="false" title="Comida" type="java.lang.Object"/>
+                    <Column editable="false" title="Postre" type="java.lang.Object"/>
                     <Column editable="false" title="Monto" type="java.lang.Object"/>
                     <Column editable="false" title="Hora y Fecha " type="java.lang.Object"/>
                   </Table>
@@ -160,37 +160,37 @@
                 <Property name="autoResizeMode" type="int" value="1"/>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="1">
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="250" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="250" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="250" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="250" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="250" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="200" resizable="false">
                       <Title/>
                       <Editor/>
                       <Renderer/>
