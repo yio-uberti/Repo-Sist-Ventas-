@@ -50,6 +50,9 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jTableDescripcionHistorial = new javax.swing.JTable();
         BotonGeneral = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JTextField();
+        jBotonBuscar2 = new javax.swing.JButton();
         jwallPaper = new javax.swing.JLabel();
 
         setClosable(true);
@@ -72,18 +75,18 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jBotonBuscar.setBackground(new java.awt.Color(0, 153, 255));
         jBotonBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jBotonBuscar.setForeground(new java.awt.Color(0, 0, 0));
-        jBotonBuscar.setText("Buscar Venta");
+        jBotonBuscar.setText("Buscar ");
         jBotonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBotonBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 110, 160, 40));
+        getContentPane().add(jBotonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 120, 40));
 
         jTipodePago.setBackground(new java.awt.Color(255, 255, 255));
         jTipodePago.setForeground(new java.awt.Color(0, 0, 0));
         jTipodePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
-        getContentPane().add(jTipodePago, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 180, 40));
+        getContentPane().add(jTipodePago, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 40));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -147,12 +150,33 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 BotonGeneralActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 90, 160, 50));
+        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 110, 160, 40));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Busqueda General :");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 100, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, -1, -1));
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Buscador por fecha : (ej: 01/05/2024)");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, 320, -1));
+
+        txtFecha.setBackground(new java.awt.Color(255, 255, 255));
+        txtFecha.setForeground(new java.awt.Color(0, 0, 0));
+        getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 160, 40));
+
+        jBotonBuscar2.setBackground(new java.awt.Color(0, 153, 255));
+        jBotonBuscar2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jBotonBuscar2.setForeground(new java.awt.Color(0, 0, 0));
+        jBotonBuscar2.setText("Buscar");
+        jBotonBuscar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBotonBuscar2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBotonBuscar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 110, 120, 40));
 
         jwallPaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo4.jpg"))); // NOI18N
         getContentPane().add(jwallPaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 770));
@@ -233,11 +257,31 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_BotonGeneralActionPerformed
 
+    private void jBotonBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscar2ActionPerformed
+        control_Ventas cont = new control_Ventas();
+        String fecha = txtFecha.getText().trim(); // Obtener la fecha desde el campo de texto
+
+        if (!fecha.matches("\\d{2}/\\d{2}/\\d{4}")) { // Validar el formato de la fecha
+            JOptionPane.showMessageDialog(this, "El formato de la fecha es incorrecto. Use el formato DD/MM/AAAA");
+        } else {
+            List<Modelo_Venta> ventas = cont.buscarPorFecha(fecha);
+
+            if (!ventas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
+                actualizarTabla(ventas);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontraron ventas para la fecha indicada");
+            }
+        }
+    }//GEN-LAST:event_jBotonBuscar2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonGeneral;
     private javax.swing.JButton jBotonBuscar;
+    private javax.swing.JButton jBotonBuscar2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JTable jTableDescripcionHistorial;
@@ -245,6 +289,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jwallPaper;
     private javax.swing.JLabel titBuscador;
     private javax.swing.JLabel titPrincipal;
+    private javax.swing.JTextField txtFecha;
     // End of variables declaration//GEN-END:variables
 
     private void actualizarTabla(List<Modelo_Venta> ventas) {
@@ -260,7 +305,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             row[4] = venta.getMontoPostre();
             row[5] = venta.getMontoTotal();
             row[6] = venta.getHora();
-            
+
             model.addRow(row);
         }
     }

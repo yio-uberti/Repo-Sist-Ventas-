@@ -3,6 +3,7 @@ package Controladores;
 import Modelos.Modelo_Venta;
 import java.sql.*;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -88,5 +89,51 @@ public class control_Ventas {
         }
 
         return listaVenta;
+    }
+
+    public List<Modelo_Venta> buscarPorFecha(String fecha) {
+        List<Modelo_Venta> listaVenta = new ArrayList<>();
+        String sql = "SELECT detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta FROM Venta WHERE DATE(horaVenta) = ?";
+
+        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
+
+            // Convertir la fecha de 'dd/MM/yyyy' a 'yyyy-MM-dd'
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter dbFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate parsedDate = LocalDate.parse(fecha, inputFormatter);
+            String formattedDate = parsedDate.format(dbFormatter);
+
+            pst.setString(1, formattedDate); // Establecer la fecha formateada
+            ResultSet rs = pst.executeQuery();
+
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM HH:mm");
+
+            while (rs.next()) {
+                Modelo_Venta venta = new Modelo_Venta();
+                venta.setTipo(rs.getString("detalle"));
+                venta.setMontoKiosco(rs.getDouble("montoKiosco"));
+                venta.setMontoPanaderia(rs.getDouble("montoPanaderia"));
+                venta.setMontoComida(rs.getDouble("montoComida"));
+                venta.setMontoPostre(rs.getDouble("montoPostre"));
+                venta.setMontoTotal(rs.getDouble("montoTotal"));
+                venta.setHora(rs.getString("horaVenta"));
+
+                // Formatear la hora para mostrar solo HH:mm
+                String horaVenta = rs.getString("horaVenta");
+                LocalDateTime dateTime = LocalDateTime.parse(horaVenta, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                String formattedHoraVenta = dateTime.format(outputFormatter);
+                venta.setHora(formattedHoraVenta);
+
+                listaVenta.add(venta);
+            }
+
+            System.out.println("Busqueda por fecha exitosa");
+
+        } catch (Exception e) {
+            System.out.println("Error al buscar venta por fecha: " + e.getMessage());
+        }
+
+        return listaVenta;
+
     }
 }
