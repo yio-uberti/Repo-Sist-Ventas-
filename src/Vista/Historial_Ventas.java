@@ -19,7 +19,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
         initComponents();
         this.setTitle("Historial de Ventas");
-        this.setSize(new Dimension(1000, 600));
+        this.setSize(new Dimension(1250, 625));
 
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
@@ -53,6 +53,12 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         txtFecha = new javax.swing.JTextField();
         jBotonBuscar2 = new javax.swing.JButton();
+        txtTotalGeneral = new javax.swing.JTextField();
+        txtEfectivo = new javax.swing.JTextField();
+        txtTransferencia = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jwallPaper = new javax.swing.JLabel();
 
         setClosable(true);
@@ -137,9 +143,9 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             jTableDescripcionHistorial.getColumnModel().getColumn(6).setPreferredWidth(200);
         }
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 540));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 400));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 950, 540));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 950, -1));
 
         BotonGeneral.setBackground(new java.awt.Color(102, 204, 255));
         BotonGeneral.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -178,8 +184,47 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jBotonBuscar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 110, 120, 40));
 
+        txtTotalGeneral.setBackground(new java.awt.Color(255, 255, 255));
+        txtTotalGeneral.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtTotalGeneral.setForeground(new java.awt.Color(0, 0, 0));
+        txtTotalGeneral.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTotalGeneral.setBorder(javax.swing.BorderFactory.createMatteBorder(4, 4, 4, 4, new java.awt.Color(0, 153, 153)));
+        getContentPane().add(txtTotalGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 70, 240, 80));
+
+        txtEfectivo.setBackground(new java.awt.Color(255, 255, 255));
+        txtEfectivo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtEfectivo.setForeground(new java.awt.Color(0, 0, 0));
+        txtEfectivo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        getContentPane().add(txtEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 240, 230, 80));
+
+        txtTransferencia.setBackground(new java.awt.Color(255, 255, 255));
+        txtTransferencia.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtTransferencia.setForeground(new java.awt.Color(0, 0, 0));
+        txtTransferencia.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTransferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTransferenciaActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtTransferencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 420, 230, 80));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("Total de Transferencia");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 380, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Total de Efectivo");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 210, -1, 20));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Total del dia:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 30, -1, -1));
+
         jwallPaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo4.jpg"))); // NOI18N
-        getContentPane().add(jwallPaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 770));
+        getContentPane().add(jwallPaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1240, 770));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -211,12 +256,11 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             ResultSet rs = st.executeQuery(sql);
 
             // Agregar columnas al modelo
-//            model.addColumn("ID");
             model.addColumn("Detalle");
             model.addColumn("Kiosco");
             model.addColumn("Panaderia");
             model.addColumn("Comida");
-            model.addColumn("Postre");
+            model.addColumn("Dulces");
             model.addColumn("Monto");
             model.addColumn("Hora de Venta");
 
@@ -224,16 +268,21 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat desiredFormat = new SimpleDateFormat("dd/MM HH:mm");
 
+            //Para almacenar el total de la venta
+            double totalVenta = 0;
+
             // Iterar a través del ResultSet y agregar filas al modelo
             while (rs.next()) {
                 Object[] row = new Object[7]; // Array para almacenar los datos de cada fila
-//                row[0] = rs.getInt("id");
                 row[0] = rs.getString("detalle");
                 row[1] = rs.getDouble("montoKiosco");
                 row[2] = rs.getDouble("montoPanaderia");
                 row[3] = rs.getDouble("montoComida");
                 row[4] = rs.getDouble("montoPostre");
                 row[5] = rs.getDouble("montoTotal");
+
+                // Sumar el montoTotal al totalVenta
+                totalVenta += rs.getDouble("montoTotal");
 
                 // Formatear la fecha y hora
                 String horaVenta = rs.getString("horaVenta");
@@ -249,6 +298,8 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
             // Asignar el modelo a la tabla jTableDescripcionHistorial
             Historial_Ventas.jTableDescripcionHistorial.setModel(model);
+
+            txtTotalGeneral.setText(String.valueOf(totalVenta));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -275,6 +326,10 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jBotonBuscar2ActionPerformed
 
+    private void txtTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTransferenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTransferenciaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonGeneral;
@@ -282,6 +337,9 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBotonBuscar2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JTable jTableDescripcionHistorial;
@@ -289,7 +347,10 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jwallPaper;
     private javax.swing.JLabel titBuscador;
     private javax.swing.JLabel titPrincipal;
+    private javax.swing.JTextField txtEfectivo;
     private javax.swing.JTextField txtFecha;
+    private javax.swing.JTextField txtTotalGeneral;
+    private javax.swing.JTextField txtTransferencia;
     // End of variables declaration//GEN-END:variables
 
     private void actualizarTabla(List<Modelo_Venta> ventas) {
