@@ -4,20 +4,18 @@ import java.util.logging.*;
 import java.sql.*;
 
 public class Conexion_BD {
-    //Creacion de conexion con base de datos
-    String bd = "base version 1.5";
-    String url = "jdbc:mysql://localhost:3306/";
-    String user = "root";
-    String password = "";
-    
-    public Conexion_BD(String bd){
-        this.bd= bd;
-    }
 
+    
     public static Connection conectar() {
+        // Cambia la URL de conexión, el usuario y la contraseña según los datos proporcionados
+
+        String url = "jdbc:mysql://root:GUfFGNKkmmWSOlRYUQmmpyGHKzCMfqbB@viaduct.proxy.rlwy.net:17459/railway";
+        String user = "root";
+        String password = "GUfFGNKkmmWSOlRYUQmmpyGHKzCMfqbB";
 
         try {
-            Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_Datos_SonDelicias", "root","");
+            // Crear la conexión con los datos ajustados
+            Connection cn = DriverManager.getConnection(url, user, password);
             return cn;
         } catch (SQLException ex) {
             System.out.println("NO SE CONECTO A BD ");
@@ -25,6 +23,9 @@ public class Conexion_BD {
         }
         return null;
     }
+
+    
+    
     
     
 }

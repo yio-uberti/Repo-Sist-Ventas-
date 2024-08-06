@@ -13,15 +13,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.*;
+
 
 public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
-    String codBarra;
+    private List<Modelo_Producto> listaProducto;
 
     public Ventana_Ventas() {
         initComponents();
         setTitle("Facturacion");
         this.setSize(new Dimension(900, 650));
+
+        tablaDescripcionVenta.getTableHeader().setReorderingAllowed(false); //para bloquear las columnas del usuario
+
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -34,7 +41,38 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 }
             }
         });
+        txtSubTotal.setEditable(false);
+        listaProducto = cargarProductos();
+    }
 
+    private List<Modelo_Producto> cargarProductos() {
+        List<Modelo_Producto> listProductos = new ArrayList<>();
+        String sql = "SELECT nombre, precio_Actual, tipo, Cod_barra FROM Producto";
+        try (Connection cn = Conexion.Conexion_BD.conectar(); Statement st = cn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Modelo_Producto producto = new Modelo_Producto();
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
+                producto.setTipo(rs.getString("tipo"));
+                producto.setCod_barra(rs.getString("Cod_barra"));
+                listProductos.add(producto);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al cargar productos: " + e.getMessage());
+        }
+
+        System.out.println("Éxito al cargar los datos!!");
+        return listProductos;
+    }
+
+    public Modelo_Producto buscarProducto(String codigoBarra) {
+        for (Modelo_Producto producto : listaProducto) {
+            if (producto.getCod_barra().equals(codigoBarra)) {
+                return producto;
+            }
+        }
+        return null; // Si no se encuentra el producto
     }
 
     @SuppressWarnings("unchecked")
@@ -114,9 +152,10 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(nombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 160, 30));
 
         txtSubTotal.setBackground(new java.awt.Color(255, 255, 255));
-        txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 32)); // NOI18N
         txtSubTotal.setForeground(new java.awt.Color(0, 0, 0));
         txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtSubTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtSubTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSubTotalActionPerformed(evt);
@@ -159,7 +198,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tablaDescripcionVenta);
         if (tablaDescripcionVenta.getColumnModel().getColumnCount() > 0) {
             tablaDescripcionVenta.getColumnModel().getColumn(0).setMaxWidth(55);
-            tablaDescripcionVenta.getColumnModel().getColumn(1).setMaxWidth(280);
+            tablaDescripcionVenta.getColumnModel().getColumn(1).setMaxWidth(300);
             tablaDescripcionVenta.getColumnModel().getColumn(2).setMaxWidth(200);
             tablaDescripcionVenta.getColumnModel().getColumn(3).setMaxWidth(180);
             tablaDescripcionVenta.getColumnModel().getColumn(4).setMaxWidth(180);
@@ -339,11 +378,12 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             //recibe el valor ingresado x el usuario
             if (cont.existeProducto(codigoBarra.getText().trim())) {
                 String codigo = codigoBarra.getText();
-                nombreProducto.setText(cont.buscarProducto(codigo).getNombre());
+                nombreProducto.setText(buscarProducto(codigo).getNombre());
 //                PrecioActual.setText(String.valueOf(cont.buscarProducto(codigo).getPrecio_Actual()));
 
             } else {
                 JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
+                codigoBarra.setText("");
             }
         }
 
@@ -354,7 +394,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         // Verifica si el producto ya está en la tabla
         DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
         control_Producto cont = new control_Producto();
-        Modelo_Producto prod = cont.buscarProducto(codigoBarra.getText().trim());
+        Modelo_Producto prod = buscarProducto(codigoBarra.getText().trim());
 
         if (prod != null) {
             boolean productoExiste = false;
@@ -420,12 +460,14 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         } else {
             String codigo = codigoBarra.getText().trim();
             if (cont.existeProducto(codigo)) {
-                pro = cont.buscarProducto(codigo);
+                codigoBarra.setBackground(Color.WHITE);
+                pro = buscarProducto(codigo);
                 nombreProducto.setText(pro.getNombre());
                 txtPrecioProducto.setText("1");
                 agregarProductoATabla(codigo);
             } else {
                 JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
+                codigoBarra.setText("");
             }
         }
     }
@@ -433,7 +475,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     // Método privado para agregar el producto a la tabla automáticamente
     private void agregarProductoATabla(String codBarra) {
         control_Producto cont = new control_Producto();
-        Modelo_Producto prod = cont.buscarProducto(codBarra);
+        Modelo_Producto prod = buscarProducto(codBarra);
 
         if (prod != null) {
             DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();

@@ -6,8 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class control_Producto {
+
+//    private List<Modelo_Producto> listaProductos;
+//
+//    public control_Producto() {
+//        this.listaProductos = cargarProductos();
+//    }
 
     //Metodo para guardar producto
     public boolean guardar(Modelo_Producto objeto) {
@@ -61,7 +69,7 @@ public class control_Producto {
     }
 
     //metodo para buscar un producto 
-    public Modelo_Producto buscarProducto(String codigoBarra) {
+    public Modelo_Producto buscarProductoUno(String codigoBarra) {
         Modelo_Producto producto = new Modelo_Producto();
         String sql = "select nombre , precio_Actual, tipo from Producto where Cod_barra = ?";
 
@@ -106,14 +114,14 @@ public class control_Producto {
 
         return producto;
     }
-    
-    public boolean eliminar(String codigoBarra){
-    
+
+    public boolean eliminar(String codigoBarra) {
+
         Modelo_Producto producto = new Modelo_Producto();
         String sql = "delete from Producto where Cod_Barra = ?";
-        
+
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
-            
+
             pst.setString(1, codigoBarra);
             int rowsAffected = pst.executeUpdate();
             return rowsAffected > 0;

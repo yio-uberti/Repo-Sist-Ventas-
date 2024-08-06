@@ -1,6 +1,5 @@
 package Vista;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 
@@ -10,21 +9,21 @@ public class Menu extends javax.swing.JFrame {
     
     public Menu() {
         initComponents();
-        this.setSize(new Dimension(1250,800));
+        this.setSize(new Dimension(1250, 800));
         this.setTitle("Sistema de Facturacion");
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-        
+
         this.setLayout(null);
         jDesktopPane_menu = new JDesktopPane();
-        
+
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto-110));
+        this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto - 110));
         this.add(jDesktopPane_menu);
-        
+
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -183,7 +182,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jGestionCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGestionCategoriaActionPerformed
         Gestion_Categoria_Proveedor gCatProveedor = new Gestion_Categoria_Proveedor();
-        jDesktopPane_menu.add( gCatProveedor);
+        jDesktopPane_menu.add(gCatProveedor);
         gCatProveedor.setVisible(true);
     }//GEN-LAST:event_jGestionCategoriaActionPerformed
 

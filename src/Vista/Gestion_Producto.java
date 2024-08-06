@@ -249,8 +249,8 @@ public class Gestion_Producto extends javax.swing.JInternalFrame {
             //recibe el valor ingresado x el usuario
             if (cont.existeProducto(txtCodigoBarra.getText().trim())) {
                 String codigo = txtCodigoBarra.getText();
-                txtNombreProducto.setText(cont.buscarProducto(codigo).getNombre());
-                txtPrecioActual.setText(String.valueOf(cont.buscarProducto(codigo).getPrecio_Actual()));
+                txtNombreProducto.setText(cont.buscarProductoUno(codigo).getNombre());
+                txtPrecioActual.setText(String.valueOf(cont.buscarProductoUno(codigo).getPrecio_Actual()));
 
             } else {
                 JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");

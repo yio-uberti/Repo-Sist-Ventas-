@@ -34,7 +34,9 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             }
         });
 
-        //this.cargarVentas();
+        txtTotalGeneral.setEditable(false);
+        txtEfectivo.setEditable(false);
+        txtTransferencia.setEditable(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -43,7 +45,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
         titPrincipal = new javax.swing.JLabel();
         titBuscador = new javax.swing.JLabel();
-        jBotonBuscar = new javax.swing.JButton();
+        jBotonBuscarPago = new javax.swing.JButton();
         jTipodePago = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -52,7 +54,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtFecha = new javax.swing.JTextField();
-        jBotonBuscar2 = new javax.swing.JButton();
+        jBotonBuscarFecha = new javax.swing.JButton();
         txtTotalGeneral = new javax.swing.JTextField();
         txtEfectivo = new javax.swing.JTextField();
         txtTransferencia = new javax.swing.JTextField();
@@ -78,16 +80,16 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         titBuscador.setText("Buscador por tipo de pago :");
         getContentPane().add(titBuscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
 
-        jBotonBuscar.setBackground(new java.awt.Color(0, 153, 255));
-        jBotonBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jBotonBuscar.setForeground(new java.awt.Color(0, 0, 0));
-        jBotonBuscar.setText("Buscar ");
-        jBotonBuscar.addActionListener(new java.awt.event.ActionListener() {
+        jBotonBuscarPago.setBackground(new java.awt.Color(0, 153, 255));
+        jBotonBuscarPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jBotonBuscarPago.setForeground(new java.awt.Color(0, 0, 0));
+        jBotonBuscarPago.setText("Buscar ");
+        jBotonBuscarPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBotonBuscarActionPerformed(evt);
+                jBotonBuscarPagoActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 120, 40));
+        getContentPane().add(jBotonBuscarPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 120, 40));
 
         jTipodePago.setBackground(new java.awt.Color(255, 255, 255));
         jTipodePago.setForeground(new java.awt.Color(0, 0, 0));
@@ -173,16 +175,16 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         txtFecha.setForeground(new java.awt.Color(0, 0, 0));
         getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 160, 40));
 
-        jBotonBuscar2.setBackground(new java.awt.Color(0, 153, 255));
-        jBotonBuscar2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jBotonBuscar2.setForeground(new java.awt.Color(0, 0, 0));
-        jBotonBuscar2.setText("Buscar");
-        jBotonBuscar2.addActionListener(new java.awt.event.ActionListener() {
+        jBotonBuscarFecha.setBackground(new java.awt.Color(0, 153, 255));
+        jBotonBuscarFecha.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jBotonBuscarFecha.setForeground(new java.awt.Color(0, 0, 0));
+        jBotonBuscarFecha.setText("Buscar");
+        jBotonBuscarFecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBotonBuscar2ActionPerformed(evt);
+                jBotonBuscarFechaActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 110, 120, 40));
+        getContentPane().add(jBotonBuscarFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 110, 120, 40));
 
         txtTotalGeneral.setBackground(new java.awt.Color(255, 255, 255));
         txtTotalGeneral.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -230,7 +232,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     //Busca la ventas segun el tipo de pago
-    private void jBotonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarActionPerformed
+    private void jBotonBuscarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarPagoActionPerformed
         control_Ventas cont = new control_Ventas();
         String detalle = (String) jTipodePago.getSelectedItem();
 
@@ -239,16 +241,42 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         if (!ventas.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
             actualizarTabla(ventas);
+            
+            // Calcular el total de ventas y los totales por tipo de pago
+                double totalVenta = 0;
+                double totalEfectivo = 0;
+                double totalTransferencia = 0;
+
+                for (Modelo_Venta venta : ventas) {
+                    totalVenta += venta.getMontoTotal();
+                    if ("Efectivo".equals(venta.getTipo())) {
+                        totalEfectivo += venta.getMontoTotal();
+                    } else if ("Transferencia".equals(venta.getTipo())) {
+                        totalTransferencia += venta.getMontoTotal();
+                    }
+                }
+
+                // Mostrar los totales en los campos de texto
+                txtTotalGeneral.setText(String.valueOf(totalVenta));
+                txtEfectivo.setText(String.valueOf(totalEfectivo));
+                txtTransferencia.setText(String.valueOf(totalTransferencia));
+            
+            
         } else {
             JOptionPane.showMessageDialog(this, "Ventas no encontradas");
         }
 
-    }//GEN-LAST:event_jBotonBuscarActionPerformed
+    }//GEN-LAST:event_jBotonBuscarPagoActionPerformed
 
     private void BotonGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGeneralActionPerformed
         Connection con = Conexion.Conexion_BD.conectar();
         DefaultTableModel model = new DefaultTableModel();
-        String sql = "select detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta from Venta ";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaActual = dateFormat.format(new Date());
+
+        String sql = "select detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta from Venta "
+                + "where DATE(horaVenta) = '" + fechaActual + "'";
         Statement st;
 
         try {
@@ -270,6 +298,8 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
             //Para almacenar el total de la venta
             double totalVenta = 0;
+            double totalEfectivo = 0;
+            double totalTransferencia = 0;
 
             // Iterar a través del ResultSet y agregar filas al modelo
             while (rs.next()) {
@@ -284,6 +314,14 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 // Sumar el montoTotal al totalVenta
                 totalVenta += rs.getDouble("montoTotal");
 
+                // Sumar los montos según el tipo de pago
+                String tipoPago = rs.getString("detalle");
+                if ("Efectivo".equals(tipoPago)) {
+                    totalEfectivo += rs.getDouble("montoTotal");
+                } else if ("Transferencia".equals(tipoPago)) {
+                    totalTransferencia += rs.getDouble("montoTotal");
+                }
+
                 // Formatear la fecha y hora
                 String horaVenta = rs.getString("horaVenta");
                 try {
@@ -297,9 +335,12 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             }
 
             // Asignar el modelo a la tabla jTableDescripcionHistorial
+            jTableDescripcionHistorial.getTableHeader().setReorderingAllowed(false);//para bloquear las columnas del usuario
             Historial_Ventas.jTableDescripcionHistorial.setModel(model);
 
             txtTotalGeneral.setText(String.valueOf(totalVenta));
+            txtEfectivo.setText(String.valueOf(totalEfectivo));
+            txtTransferencia.setText(String.valueOf(totalTransferencia));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -308,7 +349,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_BotonGeneralActionPerformed
 
-    private void jBotonBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscar2ActionPerformed
+    private void jBotonBuscarFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarFechaActionPerformed
         control_Ventas cont = new control_Ventas();
         String fecha = txtFecha.getText().trim(); // Obtener la fecha desde el campo de texto
 
@@ -320,11 +361,32 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             if (!ventas.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
                 actualizarTabla(ventas);
+
+                // Calcular el total de ventas y los totales por tipo de pago
+                double totalVenta = 0;
+                double totalEfectivo = 0;
+                double totalTransferencia = 0;
+
+                for (Modelo_Venta venta : ventas) {
+                    totalVenta += venta.getMontoTotal();
+                    if ("Efectivo".equals(venta.getTipo())) {
+                        totalEfectivo += venta.getMontoTotal();
+                    } else if ("Transferencia".equals(venta.getTipo())) {
+                        totalTransferencia += venta.getMontoTotal();
+                    }
+                }
+
+                // Mostrar los totales en los campos de texto
+                txtTotalGeneral.setText(String.valueOf(totalVenta));
+                txtEfectivo.setText(String.valueOf(totalEfectivo));
+                txtTransferencia.setText(String.valueOf(totalTransferencia));
+
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontraron ventas para la fecha indicada");
             }
         }
-    }//GEN-LAST:event_jBotonBuscar2ActionPerformed
+        txtFecha.setText("");
+    }//GEN-LAST:event_jBotonBuscarFechaActionPerformed
 
     private void txtTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTransferenciaActionPerformed
         // TODO add your handling code here:
@@ -333,8 +395,8 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonGeneral;
-    private javax.swing.JButton jBotonBuscar;
-    private javax.swing.JButton jBotonBuscar2;
+    private javax.swing.JButton jBotonBuscarFecha;
+    private javax.swing.JButton jBotonBuscarPago;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -355,6 +417,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
     private void actualizarTabla(List<Modelo_Venta> ventas) {
         DefaultTableModel model = (DefaultTableModel) jTableDescripcionHistorial.getModel();
+        jTableDescripcionHistorial.getTableHeader().setReorderingAllowed(false); //para bloquear las columnas del usuario
         model.setRowCount(0); // Limpiar la tabla
 
         for (Modelo_Venta venta : ventas) {
