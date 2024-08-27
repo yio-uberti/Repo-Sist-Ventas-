@@ -8,7 +8,7 @@ public class Modelo_Venta {
     private double montoKiosco;
     private double montoComida;
     private double montoPanaderia;
-    private double montoPostre;
+    private double montoDulce;
     private double montoTotal;
 
     public int getId() {
@@ -67,12 +67,12 @@ public class Modelo_Venta {
         this.montoTotal = monto;
     }
 
-    public double getMontoPostre() {
-        return montoPostre;
+    public double getMontoDulce() {
+        return montoDulce;
     }
 
-    public void setMontoPostre(double montoPostre) {
-        this.montoPostre = montoPostre;
+    public void setMontoDulce(double montoPostre) {
+        this.montoDulce = montoPostre;
     }
     
     

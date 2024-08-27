@@ -5,6 +5,7 @@ public class Modelo_Producto {
     private String Cod_barra;
     private String Nombre;
     private String Tipo;
+    private String Categoria;
     private double Precio_Actual;
 
     //Constructor vacio
@@ -17,10 +18,11 @@ public class Modelo_Producto {
     }
 
     //Constructor sobrecargado
-    public Modelo_Producto(String Cod_barra, String Nombre, String Tipo, double Precio_Actual) {
+    public Modelo_Producto(String Cod_barra, String Nombre, String Tipo, String Categoria,double Precio_Actual) {
         this.Cod_barra = Cod_barra;
         this.Nombre = Nombre;
         this.Tipo = Tipo;
+        this.Categoria = Categoria;
         this.Precio_Actual = Precio_Actual;
     }
     
@@ -56,6 +58,14 @@ public class Modelo_Producto {
 
     public void setTipo(String Tipo) {
         this.Tipo = Tipo;
+    }
+
+    public String getCategoria() {
+        return Categoria;
+    }
+
+    public void setCategoria(String Categoria) {
+        this.Categoria = Categoria;
     }
     
     

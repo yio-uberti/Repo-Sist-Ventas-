@@ -1,11 +1,11 @@
 package Modelos;
 
 public class Modelo_categoria {
-     
+
     private String descripcion;
     private int Id;
-    
-    public Modelo_categoria(){
+
+    public Modelo_categoria() {
         this.descripcion = "";
         this.Id = 0;
     }
@@ -22,7 +22,7 @@ public class Modelo_categoria {
     public void setId(int Id) {
         this.Id = Id;
     }
-    
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -30,5 +30,10 @@ public class Modelo_categoria {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-   
+
+    @Override
+    public String toString() {
+        return this.descripcion;  // Muestra la descripción en el JComboBox
+    }
+
 }

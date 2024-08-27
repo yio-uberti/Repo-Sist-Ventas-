@@ -110,12 +110,12 @@ public class Menu extends javax.swing.JFrame {
         jMenuBarra.add(jMenu3);
 
         jMenu4.setBackground(new java.awt.Color(0, 102, 153));
-        jMenu4.setText("Categoria-Proveedor      ");
+        jMenu4.setText("Categoria");
         jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jNuevaCategoria.setBackground(new java.awt.Color(255, 255, 255));
         jNuevaCategoria.setForeground(new java.awt.Color(0, 0, 0));
-        jNuevaCategoria.setText("Nueva categoria-Proveedor");
+        jNuevaCategoria.setText("Nueva Categoria");
         jNuevaCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jNuevaCategoriaActionPerformed(evt);
@@ -124,7 +124,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu4.add(jNuevaCategoria);
 
         jGestionCategoria.setForeground(new java.awt.Color(0, 0, 0));
-        jGestionCategoria.setText("Gestion de Categoria-Proveedor");
+        jGestionCategoria.setText("Gestion de Categoria");
         jGestionCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jGestionCategoriaActionPerformed(evt);
@@ -140,7 +140,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1800, Short.MAX_VALUE)
+            .addGap(0, 1400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +163,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_Ingresar_ProductoActionPerformed
 
     private void Modificar_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Modificar_ProductoActionPerformed
-        Gestion_Producto gestionProducto = new Gestion_Producto();
+        Gestion_Actualizacion_Producto gestionProducto = new Gestion_Actualizacion_Producto();
         jDesktopPane_menu.add(gestionProducto);
         gestionProducto.setVisible(true);
     }//GEN-LAST:event_Modificar_ProductoActionPerformed

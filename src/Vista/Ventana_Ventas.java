@@ -6,21 +6,14 @@ import Modelos.Modelo_Producto;
 import Modelos.Modelo_Venta;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.*;
-
 
 public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
-    private List<Modelo_Producto> listaProducto;
+    private final control_Producto control;
 
     public Ventana_Ventas() {
         initComponents();
@@ -42,39 +35,9 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             }
         });
         txtSubTotal.setEditable(false);
-        listaProducto = cargarProductos();
+        control = new control_Producto();
     }
-
-    private List<Modelo_Producto> cargarProductos() {
-        List<Modelo_Producto> listProductos = new ArrayList<>();
-        String sql = "SELECT nombre, precio_Actual, tipo, Cod_barra FROM Producto";
-        try (Connection cn = Conexion.Conexion_BD.conectar(); Statement st = cn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                Modelo_Producto producto = new Modelo_Producto();
-                producto.setNombre(rs.getString("nombre"));
-                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
-                producto.setTipo(rs.getString("tipo"));
-                producto.setCod_barra(rs.getString("Cod_barra"));
-                listProductos.add(producto);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al cargar productos: " + e.getMessage());
-        }
-
-        System.out.println("Éxito al cargar los datos!!");
-        return listProductos;
-    }
-
-    public Modelo_Producto buscarProducto(String codigoBarra) {
-        for (Modelo_Producto producto : listaProducto) {
-            if (producto.getCod_barra().equals(codigoBarra)) {
-                return producto;
-            }
-        }
-        return null; // Si no se encuentra el producto
-    }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -277,14 +240,13 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     //Metodo para registrar una venta 
     private void registroVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registroVentasActionPerformed
-        control_Producto cont_p = new control_Producto();
         control_Ventas cont = new control_Ventas();
 
         try {
             double montoKiosco = 0;
             double montoComida = 0;
             double montoPanaderia = 0;
-            double montoPostre = 0;
+            double montoDulce = 0;
             double montoTotal = 0;
 
             // Recorrer la tabla para sumar los montos según el tipo de producto
@@ -297,41 +259,40 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 double montoProducto = precioProducto * cantidad;
 
                 switch (tipoProducto) {
-                    case "Kiosco":
-                        montoKiosco += montoProducto;
-                        break;
-                    case "Comida":
-                        montoComida += montoProducto;
-                        break;
-                    case "Panaderia":
-                        montoPanaderia += montoProducto;
-                        break;
-                    case "Postre":
-                        montoPostre += montoProducto;
-                        break;
+                    case "Kiosco" -> montoKiosco += montoProducto;
+                    case "Comida" -> montoComida += montoProducto;
+                    case "Panaderia" -> montoPanaderia += montoProducto;
+                    case "Dulce" -> montoDulce += montoProducto;
                 }
-
                 montoTotal += montoProducto;
             }
 
+            if(montoTotal != 0){
+                System.out.println("El monto es distinto de cero...");
+            }
+            
             //formateo de datos
             String hora = java.time.LocalDateTime.now().toString();
             String detalle = (String) tipoPago.getSelectedItem();
 
-            Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, hora, detalle);
+            if (montoTotal > 0) {
+                Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoDulce, montoTotal, hora, detalle);
 
-            if (venta.getId() != 0) {
-                JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
-                // Limpiar campos
-                model.setRowCount(0);
-                txtSubTotal.setText("");
+                if (venta.getId() != 0) {
+                    JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
+                    // Limpiar campos
+                    model.setRowCount(0);
+                    txtSubTotal.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al registrar la venta");
+
+                    model.setRowCount(0);
+                    txtSubTotal.setText("");
+                }
+
             } else {
-                JOptionPane.showMessageDialog(this, "Error al registrar la venta");
-
-                model.setRowCount(0);
-                txtSubTotal.setText("");
+                JOptionPane.showMessageDialog(this, "No hay producto cargados, no se puede cargar la venta");
             }
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al registrar la venta");
             System.out.println(e.getMessage());
@@ -378,8 +339,8 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             //recibe el valor ingresado x el usuario
             if (cont.existeProducto(codigoBarra.getText().trim())) {
                 String codigo = codigoBarra.getText();
-                nombreProducto.setText(buscarProducto(codigo).getNombre());
-//                PrecioActual.setText(String.valueOf(cont.buscarProducto(codigo).getPrecio_Actual()));
+                nombreProducto.setText(cont.buscarProductoUno(codigo).getNombre());
+                txtPrecioProducto.setText(String.valueOf(cont.buscarProductoUno(codigo).getPrecio_Actual()));
 
             } else {
                 JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
@@ -387,14 +348,13 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             }
         }
 
-
     }//GEN-LAST:event_jBotonBuscarActionPerformed
 
     private void jBotonAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonAnadirActionPerformed
         // Verifica si el producto ya está en la tabla
         DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
         control_Producto cont = new control_Producto();
-        Modelo_Producto prod = buscarProducto(codigoBarra.getText().trim());
+        Modelo_Producto prod = cont.buscarProductoUno(codigoBarra.getText().trim());
 
         if (prod != null) {
             boolean productoExiste = false;
@@ -451,68 +411,67 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     // Método privado para búsqueda y agregado automático
     private void buscarYAgregar() {
-        Modelo_Producto pro = new Modelo_Producto();
-        control_Producto cont = new control_Producto();
+        String codigo = codigoBarra.getText().trim();
 
-        if (codigoBarra.getText().isEmpty()) {
+        //Revisamos que haya un codigo de barra
+        if (codigo.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Complete el código de barra");
             codigoBarra.setBackground(Color.red);
+            return;
+        }
+
+        Modelo_Producto pro = control.buscarProductoPorCodigo(codigo);
+        //Revisamos que el producto se encontro
+        if (pro != null) {
+            codigoBarra.setBackground(Color.WHITE);
+            nombreProducto.setText(pro.getNombre());
+            txtPrecioProducto.setText("1");
+            System.out.println("Encontrado...");
+            agregarProductoATabla(pro);
         } else {
-            String codigo = codigoBarra.getText().trim();
-            if (cont.existeProducto(codigo)) {
-                codigoBarra.setBackground(Color.WHITE);
-                pro = buscarProducto(codigo);
-                nombreProducto.setText(pro.getNombre());
-                txtPrecioProducto.setText("1");
-                agregarProductoATabla(codigo);
-            } else {
-                JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
-                codigoBarra.setText("");
-            }
+            JOptionPane.showMessageDialog(null, "El producto seleccionado no existe");
+            codigoBarra.setText("");
         }
     }
 
-    // Método privado para agregar el producto a la tabla automáticamente
-    private void agregarProductoATabla(String codBarra) {
-        control_Producto cont = new control_Producto();
-        Modelo_Producto prod = buscarProducto(codBarra);
+// Modificamos este método para recibir el objeto Producto
+    private void agregarProductoATabla(Modelo_Producto prod) {
+        DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
 
-        if (prod != null) {
-            DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
-
-            // Verificar si el producto ya existe en la tabla
-            boolean productoExiste = false;
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String nombre = model.getValueAt(i, 1).toString();
-                if (nombre.equals(prod.getNombre())) {
-                    // Si el producto existe, actualizar la cantidad y el subtotal
-                    int cantidadActual = Integer.parseInt(model.getValueAt(i, 0).toString());
-                    int cantidadNueva = cantidadActual + Integer.parseInt(txtPrecioProducto.getText().trim());
-                    double precio = Double.parseDouble(model.getValueAt(i, 3).toString());
-                    model.setValueAt(cantidadNueva, i, 0);
-                    model.setValueAt(cantidadNueva * precio, i, 4);
-                    productoExiste = true;
-                    break;
-                }
+        // Verificar si el producto ya existe en la tabla
+        boolean productoExiste = false;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String nombre = model.getValueAt(i, 1).toString();
+            if (nombre.equals(prod.getNombre())) {
+                // Si el producto existe, actualizar la cantidad y el subtotal
+                int cantidadActual = Integer.parseInt(model.getValueAt(i, 0).toString());
+                int cantidadNueva = cantidadActual + Integer.parseInt(txtPrecioProducto.getText().trim());
+                double precio = Double.parseDouble(model.getValueAt(i, 3).toString());
+                model.setValueAt(cantidadNueva, i, 0);
+                model.setValueAt(cantidadNueva * precio, i, 4);
+                productoExiste = true;
+                break;
             }
-
-            // Si el producto no existe, agregarlo como una nueva fila
-            if (!productoExiste) {
-                int cantidad = Integer.parseInt(txtPrecioProducto.getText().trim());
-                String nombre = prod.getNombre();
-                String tipo = prod.getTipo();
-                double precio = prod.getPrecio_Actual();
-
-                double subtotal = cantidad * precio;
-                model.addRow(new Object[]{cantidad, nombre, tipo, precio, subtotal});
-            }
-
-            // Limpiar campos después de agregar
-            codigoBarra.setText("");
-            nombreProducto.setText("");
-            txtPrecioProducto.setText("");
-            actualizarTotal();
         }
+
+        // Si el producto no existe, agregarlo como una nueva fila
+        if (!productoExiste) {
+            int cantidad = Integer.parseInt(txtPrecioProducto.getText().trim());
+            String nombre = prod.getNombre();
+            String tipo = prod.getTipo();
+            double precio = prod.getPrecio_Actual();
+
+            double subtotal = cantidad * precio;
+            model.addRow(new Object[]{cantidad, nombre, tipo, precio, subtotal});
+        }
+
+        System.out.println("Producto agregado a la tabla...\n");
+
+        // Limpiar campos después de agregar
+        codigoBarra.setText("");
+        nombreProducto.setText("");
+        txtPrecioProducto.setText("");
+        actualizarTotal();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

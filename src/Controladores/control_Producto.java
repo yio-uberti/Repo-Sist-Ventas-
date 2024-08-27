@@ -7,15 +7,49 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class control_Producto {
 
-//    private List<Modelo_Producto> listaProductos;
-//
-//    public control_Producto() {
-//        this.listaProductos = cargarProductos();
-//    }
+    private List<Modelo_Producto> listaProductos;
+
+    public control_Producto() {
+        if(this.listaProductos == null || this.listaProductos.isEmpty()){
+            this.listaProductos = cargarProductos();
+        }
+    }
+
+    private List<Modelo_Producto> cargarProductos() {
+        List<Modelo_Producto> productos = new ArrayList<>();
+        String sql = "SELECT Cod_Barra, nombre, precio_Actual, tipo, categoria_id FROM Producto";
+
+        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql); ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                Modelo_Producto producto = new Modelo_Producto();
+                producto.setCod_barra(rs.getString("Cod_Barra"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
+                producto.setTipo(rs.getString("tipo"));
+                productos.add(producto);
+            }
+            System.out.println("Carga exitosa de la tabla \n");
+        } catch (SQLException e) {
+            System.out.println("Error al cargar productos: " + e.getMessage());
+        }
+
+        return productos;
+    }
+
+    public Modelo_Producto buscarProductoPorCodigo(String codigoBarra) {
+        for (Modelo_Producto producto : listaProductos) {
+            if (producto.getCod_barra().equals(codigoBarra)) {
+                return producto;
+            }
+        }
+        return null; // Si no se encuentra el producto
+    }
 
     //Metodo para guardar producto
     public boolean guardar(Modelo_Producto objeto) {
@@ -25,11 +59,12 @@ public class control_Producto {
         cn = Conexion.Conexion_BD.conectar();
 
         try {
-            PreparedStatement consulta = cn.prepareStatement("insert into Producto values(?,?,?,?)");
+            PreparedStatement consulta = cn.prepareStatement("insert into Producto values(?,?,?,?,?)");
             consulta.setString(1, objeto.getCod_barra());//Cod_Barra
             consulta.setString(2, objeto.getNombre());
             consulta.setString(3, objeto.getTipo());
-            consulta.setDouble(4, objeto.getPrecio_Actual());
+            consulta.setString(4, objeto.getCategoria());
+            consulta.setDouble(5, objeto.getPrecio_Actual());
 
             if (consulta.executeUpdate() > 0) {
                 respuesta = true;
@@ -70,8 +105,8 @@ public class control_Producto {
 
     //metodo para buscar un producto 
     public Modelo_Producto buscarProductoUno(String codigoBarra) {
-        Modelo_Producto producto = new Modelo_Producto();
-        String sql = "select nombre , precio_Actual, tipo from Producto where Cod_barra = ?";
+        Modelo_Producto producto = null;
+        String sql = "SELECT nombre, precio_Actual, tipo, categoria_id FROM Producto WHERE Cod_Barra = ?";
 
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
 
@@ -79,18 +114,15 @@ public class control_Producto {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                String nombre = rs.getString("nombre");
-                double precio = rs.getDouble("precio_Actual");
-                String tipo = rs.getString("tipo");
-
-                producto.setNombre(nombre);
-                producto.setPrecio_Actual(precio);
-                producto.setTipo(tipo);
+                producto = new Modelo_Producto();
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
+                producto.setTipo(rs.getString("tipo"));
+                producto.setCategoria(rs.getString("categoria_id"));
             }
         } catch (SQLException e) {
             System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
         }
-
         return producto;
     }
 
@@ -132,5 +164,8 @@ public class control_Producto {
         }
 
     }
-
+    
+    
+    
+    
 }

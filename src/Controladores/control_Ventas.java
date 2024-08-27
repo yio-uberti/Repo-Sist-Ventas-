@@ -34,7 +34,7 @@ public class control_Ventas {
                         venta.setMontoKiosco(montoKiosco);
                         venta.setMontoComida(montoComida);
                         venta.setMontoPanaderia(montoPanaderia);
-                        venta.setMontoPostre(montoPostre);
+                        venta.setMontoDulce(montoPostre);
                         venta.setMontoTotal(montoTotal);
                         venta.setHora(hora);
                     }
@@ -68,7 +68,7 @@ public class control_Ventas {
                 venta.setMontoKiosco(rs.getDouble("montoKiosco"));
                 venta.setMontoPanaderia(rs.getDouble("montoPanaderia"));
                 venta.setMontoComida(rs.getDouble("montoComida"));
-                venta.setMontoPostre(rs.getDouble("montoPostre"));
+                venta.setMontoDulce(rs.getDouble("montoPostre"));
                 venta.setMontoTotal(rs.getDouble("montoTotal"));
                 venta.setHora(rs.getString("horaVenta"));
 
@@ -114,7 +114,7 @@ public class control_Ventas {
                 venta.setMontoKiosco(rs.getDouble("montoKiosco"));
                 venta.setMontoPanaderia(rs.getDouble("montoPanaderia"));
                 venta.setMontoComida(rs.getDouble("montoComida"));
-                venta.setMontoPostre(rs.getDouble("montoPostre"));
+                venta.setMontoDulce(rs.getDouble("montoPostre"));
                 venta.setMontoTotal(rs.getDouble("montoTotal"));
                 venta.setHora(rs.getString("horaVenta"));
 

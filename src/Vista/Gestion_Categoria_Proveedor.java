@@ -159,7 +159,7 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, "Error al eliminar Proveedor");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Seleecione un Proveedor");
+            JOptionPane.showMessageDialog(null, "Selecione un Proveedor");
         }
     }//GEN-LAST:event_jBotonEliminarActionPerformed
 
@@ -182,7 +182,7 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
     private void cargarCategoriaProveedor() {
         Connection con = Conexion.Conexion_BD.conectar();
         DefaultTableModel model = new DefaultTableModel();
-        String sql = "select id, descripcion from Categoria ";
+        String sql = "select id, nombre_Categoria from Categoria ";
         Statement st;
 
         try {
@@ -192,7 +192,7 @@ public class Gestion_Categoria_Proveedor extends javax.swing.JInternalFrame {
             Gestion_Categoria_Proveedor.jScrollPane1.setViewportView(Gestion_Categoria_Proveedor.jTableCategoria);
 
             model.addColumn("id");
-            model.addColumn("Nombre Proveedor");
+            model.addColumn("nombre_Categoria");
 
             while (rs.next()) {
                 Object fila[] = new Object[2];
