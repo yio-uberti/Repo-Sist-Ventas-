@@ -13,7 +13,8 @@ public class Ingreso_Categoria_Proveedor extends javax.swing.JInternalFrame {
     public Ingreso_Categoria_Proveedor() {
         initComponents();
         setTitle("Ingreso de Categoria-Proveedor");
-        this.setSize(new Dimension(550,300));
+        this.setSize(new Dimension(550,250));
+        
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -60,13 +61,13 @@ public class Ingreso_Categoria_Proveedor extends javax.swing.JInternalFrame {
 
         titNombreP.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titNombreP.setForeground(new java.awt.Color(0, 0, 0));
-        titNombreP.setText("Nombre del Proveedor");
+        titNombreP.setText("Nombre de la Categoria");
         getContentPane().add(titNombreP, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, 30));
 
         titVentana.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         titVentana.setForeground(new java.awt.Color(0, 0, 0));
-        titVentana.setText("Ingreso de Nueva Categoria-Proveedor");
-        getContentPane().add(titVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 30));
+        titVentana.setText("Ingreso de Nueva Categoria");
+        getContentPane().add(titVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, 30));
 
         jLabel_wallpaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo4.jpg"))); // NOI18N
         getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 538, 314));

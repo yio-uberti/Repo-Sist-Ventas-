@@ -19,7 +19,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
         initComponents();
         this.setTitle("Historial de Ventas");
-        this.setSize(new Dimension(1290, 700));
+        this.setSize(new Dimension(1290, 650));
 
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
@@ -44,7 +44,6 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        titPrincipal = new javax.swing.JLabel();
         titBuscador = new javax.swing.JLabel();
         jBotonBuscarPago = new javax.swing.JButton();
         jTipodePago = new javax.swing.JComboBox<>();
@@ -66,28 +65,24 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         txtComida = new javax.swing.JTextField();
         txtPanaderia = new javax.swing.JTextField();
         txtDulce = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jwallPaper = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        titPrincipal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        titPrincipal.setForeground(new java.awt.Color(0, 0, 0));
-        titPrincipal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titPrincipal.setText(" Historial de Ventas ");
-        titPrincipal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        getContentPane().add(titPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
-
         titBuscador.setBackground(new java.awt.Color(0, 0, 0));
         titBuscador.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titBuscador.setForeground(new java.awt.Color(0, 0, 0));
         titBuscador.setText("Buscador por tipo de pago :");
-        getContentPane().add(titBuscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
+        getContentPane().add(titBuscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jBotonBuscarPago.setBackground(new java.awt.Color(0, 153, 255));
         jBotonBuscarPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -98,17 +93,18 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 jBotonBuscarPagoActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscarPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 120, 40));
+        getContentPane().add(jBotonBuscarPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, 120, 40));
 
         jTipodePago.setBackground(new java.awt.Color(255, 255, 255));
+        jTipodePago.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTipodePago.setForeground(new java.awt.Color(0, 0, 0));
         jTipodePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
-        getContentPane().add(jTipodePago, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 40));
+        getContentPane().add(jTipodePago, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 40));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTableDescripcionHistorial.setBackground(new java.awt.Color(255, 255, 255));
-        jTableDescripcionHistorial.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTableDescripcionHistorial.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jTableDescripcionHistorial.setForeground(new java.awt.Color(0, 0, 0));
         jTableDescripcionHistorial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -134,6 +130,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         jTableDescripcionHistorial.setGridColor(new java.awt.Color(255, 255, 255));
         jTableDescripcionHistorial.setPreferredSize(new java.awt.Dimension(1000, 0));
         jTableDescripcionHistorial.setRequestFocusEnabled(false);
+        jTableDescripcionHistorial.setRowHeight(30);
         jTableDescripcionHistorial.setShowGrid(false);
         jScrollPane1.setViewportView(jTableDescripcionHistorial);
         jTableDescripcionHistorial.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -154,9 +151,9 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             jTableDescripcionHistorial.getColumnModel().getColumn(6).setPreferredWidth(200);
         }
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 450));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 500));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 950, 450));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 950, 500));
 
         BotonGeneral.setBackground(new java.awt.Color(102, 204, 255));
         BotonGeneral.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -167,22 +164,22 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 BotonGeneralActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 110, 160, 40));
+        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 20, 160, 60));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Busqueda General :");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, -1, -1));
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Buscador por fecha : (ej: 01/05/2024)");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, 320, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 320, -1));
 
         txtFecha.setBackground(new java.awt.Color(255, 255, 255));
         txtFecha.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 160, 40));
+        getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 40, 160, 40));
 
         jBotonBuscarFecha.setBackground(new java.awt.Color(0, 153, 255));
         jBotonBuscarFecha.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -193,20 +190,20 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 jBotonBuscarFechaActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscarFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 110, 120, 40));
+        getContentPane().add(jBotonBuscarFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 40, 120, 40));
 
         txtTotalGeneral.setBackground(new java.awt.Color(255, 255, 255));
         txtTotalGeneral.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTotalGeneral.setForeground(new java.awt.Color(0, 0, 0));
         txtTotalGeneral.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalGeneral.setBorder(javax.swing.BorderFactory.createMatteBorder(4, 4, 4, 4, new java.awt.Color(0, 153, 153)));
-        getContentPane().add(txtTotalGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, 240, 80));
+        getContentPane().add(txtTotalGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 130, 240, 80));
 
         txtEfectivo.setBackground(new java.awt.Color(255, 255, 255));
         txtEfectivo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEfectivo.setForeground(new java.awt.Color(0, 0, 0));
         txtEfectivo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        getContentPane().add(txtEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 170, 230, 40));
+        getContentPane().add(txtEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 250, 230, 40));
 
         txtTransferencia.setBackground(new java.awt.Color(255, 255, 255));
         txtTransferencia.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -217,34 +214,34 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 txtTransferenciaActionPerformed(evt);
             }
         });
-        getContentPane().add(txtTransferencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 260, 230, 40));
+        getContentPane().add(txtTransferencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 330, 230, 40));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Total de Transferencia");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 230, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 300, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Total de Efectivo");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 140, -1, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 220, -1, 20));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Total del dia:");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 10, -1, -1));
+        jLabel5.setText("Total");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 100, 50, -1));
 
         txtKiosco.setBackground(new java.awt.Color(255, 255, 255));
         txtKiosco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtKiosco.setForeground(new java.awt.Color(0, 0, 0));
         txtKiosco.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        getContentPane().add(txtKiosco, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 430, 230, 40));
+        getContentPane().add(txtKiosco, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 450, 150, 40));
 
         txtComida.setBackground(new java.awt.Color(255, 255, 255));
         txtComida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtComida.setForeground(new java.awt.Color(0, 0, 0));
         txtComida.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        getContentPane().add(txtComida, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 350, 230, 40));
+        getContentPane().add(txtComida, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 400, 150, 40));
 
         txtPanaderia.setBackground(new java.awt.Color(255, 255, 255));
         txtPanaderia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -255,7 +252,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 txtPanaderiaActionPerformed(evt);
             }
         });
-        getContentPane().add(txtPanaderia, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 510, 230, 40));
+        getContentPane().add(txtPanaderia, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 500, 150, 40));
 
         txtDulce.setBackground(new java.awt.Color(255, 255, 255));
         txtDulce.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -266,27 +263,38 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 txtDulceActionPerformed(evt);
             }
         });
-        getContentPane().add(txtDulce, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 590, 230, 40));
+        getContentPane().add(txtDulce, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 550, 150, 40));
+
+        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 40, 230, 40));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Total Comida");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 320, -1, -1));
+        jLabel7.setText("Comida");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 400, -1, 40));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Total Dulce");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 560, -1, -1));
+        jLabel6.setText("Dulce");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 550, 50, 40));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setText("Total Kiosco");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 400, -1, -1));
+        jLabel8.setText("Kiosco");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 450, -1, 40));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Total Panaderia");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 480, -1, -1));
+        jLabel9.setText("Panaderia");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 500, -1, 40));
+
+        jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 100, 270, 280));
+
+        jLabel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 390, 270, 210));
 
         jwallPaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo4.jpg"))); // NOI18N
         getContentPane().add(jwallPaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 770));
@@ -471,7 +479,10 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JButton BotonGeneral;
     private javax.swing.JButton jBotonBuscarFecha;
     private javax.swing.JButton jBotonBuscarPago;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -486,7 +497,6 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> jTipodePago;
     private javax.swing.JLabel jwallPaper;
     private javax.swing.JLabel titBuscador;
-    private javax.swing.JLabel titPrincipal;
     private javax.swing.JTextField txtComida;
     private javax.swing.JTextField txtDulce;
     private javax.swing.JTextField txtEfectivo;

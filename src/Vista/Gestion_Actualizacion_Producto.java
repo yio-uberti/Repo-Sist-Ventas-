@@ -16,7 +16,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
     public Gestion_Actualizacion_Producto() {
         initComponents();
         this.setTitle("Gestion de Productos");
-        this.setSize(new Dimension(1230, 835));
+        this.setSize(new Dimension(1230, 650));
 
         jTable_Producto.getTableHeader().setReorderingAllowed(false); //para bloquear las columnas del usuario
         cargarCategoriasEnComboBox();
@@ -73,12 +73,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         titPrecio = new javax.swing.JLabel();
         titNombrePro1 = new javax.swing.JLabel();
         titPrecio1 = new javax.swing.JLabel();
+        titPrecio2 = new javax.swing.JLabel();
         BotonLimpiarTabla = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        titPrecio2 = new javax.swing.JLabel();
         jLabel_wallpapaer = new javax.swing.JLabel();
 
         setClosable(true);
@@ -95,7 +95,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         txtPrecioNuevo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtPrecioNuevo.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioNuevo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        getContentPane().add(txtPrecioNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 600, 230, 50));
+        getContentPane().add(txtPrecioNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 440, 230, 40));
 
         txtNombreProducto.setBackground(new java.awt.Color(255, 255, 255));
         txtNombreProducto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -116,7 +116,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable_Producto.setBackground(new java.awt.Color(255, 255, 255));
-        jTable_Producto.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jTable_Producto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTable_Producto.setForeground(new java.awt.Color(0, 0, 0));
         jTable_Producto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -132,9 +132,9 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         jTable_Producto.setRowHeight(30);
         jScrollPane1.setViewportView(jTable_Producto);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1160, 380));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1160, 230));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 1160, 380));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 1160, 230));
 
         txtPrecioActual.setBackground(new java.awt.Color(255, 255, 255));
         txtPrecioActual.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -145,7 +145,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
                 txtPrecioActualActionPerformed(evt);
             }
         });
-        getContentPane().add(txtPrecioActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 540, 230, 50));
+        getContentPane().add(txtPrecioActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, 230, 40));
 
         txtNombreSeleccionado.setBackground(new java.awt.Color(255, 255, 255));
         txtNombreSeleccionado.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -155,7 +155,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
                 txtNombreSeleccionadoActionPerformed(evt);
             }
         });
-        getContentPane().add(txtNombreSeleccionado, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 580, 310, 40));
+        getContentPane().add(txtNombreSeleccionado, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 420, 310, 40));
 
         BotonActualizar.setBackground(new java.awt.Color(0, 204, 255));
         BotonActualizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -166,7 +166,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
                 BotonActualizarActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 550, 250, 90));
+        getContentPane().add(BotonActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 390, 250, 90));
 
         BotonBorrar.setBackground(new java.awt.Color(255, 0, 0));
         BotonBorrar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -177,13 +177,13 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
                 BotonBorrarActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 700, 170, 50));
+        getContentPane().add(BotonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 520, 170, 60));
 
         txtPrecioNuevoColectiva.setBackground(new java.awt.Color(255, 255, 255));
         txtPrecioNuevoColectiva.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtPrecioNuevoColectiva.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioNuevoColectiva.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        getContentPane().add(txtPrecioNuevoColectiva, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 730, 230, 40));
+        getContentPane().add(txtPrecioNuevoColectiva, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 550, 230, 40));
 
         BotonActualizarTodo.setBackground(new java.awt.Color(0, 204, 255));
         BotonActualizarTodo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -194,12 +194,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
                 BotonActualizarTodoActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonActualizarTodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 690, 250, 70));
+        getContentPane().add(BotonActualizarTodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 510, 250, 80));
 
         titEliminar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titEliminar.setForeground(new java.awt.Color(0, 0, 0));
         titEliminar.setText("Seleccione el producto a eliminar de la tabla...");
-        getContentPane().add(titEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 710, -1, -1));
+        getContentPane().add(titEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 530, -1, -1));
 
         titBuscador.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titBuscador.setForeground(new java.awt.Color(0, 0, 0));
@@ -209,12 +209,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         titActualizacion2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titActualizacion2.setForeground(new java.awt.Color(0, 0, 0));
         titActualizacion2.setText("Actualizacion Colectiva:");
-        getContentPane().add(titActualizacion2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 670, -1, -1));
+        getContentPane().add(titActualizacion2, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 500, -1, -1));
 
         titActualizacion1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titActualizacion1.setForeground(new java.awt.Color(0, 0, 0));
         titActualizacion1.setText("Actualizacion Unitaria:");
-        getContentPane().add(titActualizacion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 540, -1, -1));
+        getContentPane().add(titActualizacion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, -1, -1));
 
         titCategoria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         titCategoria.setForeground(new java.awt.Color(0, 0, 0));
@@ -224,12 +224,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         titNombrePro.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         titNombrePro.setForeground(new java.awt.Color(0, 0, 0));
         titNombrePro.setText("Nombre del Producto:");
-        getContentPane().add(titNombrePro, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 580, -1, 40));
+        getContentPane().add(titNombrePro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, -1, 40));
 
         titPrecio.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         titPrecio.setForeground(new java.awt.Color(0, 0, 0));
         titPrecio.setText("Precio Nuevo:");
-        getContentPane().add(titPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 700, 100, 30));
+        getContentPane().add(titPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 520, 100, 30));
 
         titNombrePro1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         titNombrePro1.setForeground(new java.awt.Color(0, 0, 0));
@@ -239,7 +239,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         titPrecio1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         titPrecio1.setForeground(new java.awt.Color(0, 0, 0));
         titPrecio1.setText("Precio Actual:");
-        getContentPane().add(titPrecio1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 540, 100, 50));
+        getContentPane().add(titPrecio1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 390, 100, 40));
+
+        titPrecio2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        titPrecio2.setForeground(new java.awt.Color(0, 0, 0));
+        titPrecio2.setText("Precio Nuevo:");
+        getContentPane().add(titPrecio2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 440, 100, 40));
 
         BotonLimpiarTabla.setBackground(new java.awt.Color(255, 0, 0));
         BotonLimpiarTabla.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -255,7 +260,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, 1160, 130));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 1160, 110));
 
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 1160, 120));
@@ -263,17 +268,12 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 670, 590, 110));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 500, 590, 100));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 670, 560, 110));
-
-        titPrecio2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        titPrecio2.setForeground(new java.awt.Color(0, 0, 0));
-        titPrecio2.setText("Precio Nuevo:");
-        getContentPane().add(titPrecio2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 600, 100, 50));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 500, 560, 100));
 
         jLabel_wallpapaer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo7.png"))); // NOI18N
         getContentPane().add(jLabel_wallpapaer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1220, 800));
@@ -311,7 +311,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
             // Preparar la consulta SQL con parámetros
             String sql = "SELECT Cod_Barra, nombre_Producto, tipo, categoria_id, precio_Actual "
                     + "FROM Producto WHERE nombre_Producto LIKE ? AND categoria_id = ?";
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
+            try (PreparedStatement ps = con.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
                 ps.setString(1, "%" + nombrePro + "%");  // Buscar coincidencias parciales
                 ps.setInt(2, categoriaSeleccionada.getId());
 
@@ -355,7 +355,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int selectedRow = jTable_Producto.getSelectedRow();
                 if (selectedRow != -1) {
-                    String nombreProducto = jTable_Producto.getValueAt(selectedRow, 1).toString(); // Columna 1 para nombre
+                    String nombreProducto = jTable_Producto.getValueAt(selectedRow, 2).toString(); // Columna 1 para nombre
                     String precioActual = jTable_Producto.getValueAt(selectedRow, 4).toString(); // Columna 4 para precio
 
                     txtNombreSeleccionado.setText(nombreProducto);

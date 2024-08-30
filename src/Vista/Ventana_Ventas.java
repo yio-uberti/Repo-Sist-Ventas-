@@ -1,5 +1,6 @@
 package Vista;
 
+//Importaciones
 import Controladores.control_Producto;
 import Controladores.control_Ventas;
 import Modelos.Modelo_Producto;
@@ -18,7 +19,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     public Ventana_Ventas() {
         initComponents();
         setTitle("Facturacion");
-        this.setSize(new Dimension(900, 650));
+        this.setSize(new Dimension(1100, 650));
 
         tablaDescripcionVenta.getTableHeader().setReorderingAllowed(false); //para bloquear las columnas del usuario
 
@@ -59,8 +60,10 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jButtonLimpiar = new javax.swing.JButton();
         jBotonBuscar = new javax.swing.JButton();
         jBotonAnadir = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        BotonEliminar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jwallpaper = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 0, 0));
@@ -71,48 +74,51 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         setMinimumSize(new java.awt.Dimension(740, 441));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        titCant.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        titCant.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titCant.setForeground(new java.awt.Color(0, 0, 0));
         titCant.setText("Precio");
-        getContentPane().add(titCant, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, -1, -1));
+        getContentPane().add(titCant, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 20, 70, 30));
 
         titCodigoBarra.setBackground(new java.awt.Color(255, 255, 255));
-        titCodigoBarra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        titCodigoBarra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titCodigoBarra.setForeground(new java.awt.Color(0, 0, 0));
         titCodigoBarra.setText("Codigo Barra");
-        getContentPane().add(titCodigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+        getContentPane().add(titCodigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 110, 30));
 
-        titProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        titProducto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titProducto.setForeground(new java.awt.Color(0, 0, 0));
         titProducto.setText("Producto");
-        getContentPane().add(titProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 40, -1, -1));
+        getContentPane().add(titProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 20, 100, 30));
 
         txtPrecioProducto.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecioProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtPrecioProducto.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPrecioProductoActionPerformed(evt);
             }
         });
-        getContentPane().add(txtPrecioProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 70, 70, 30));
+        getContentPane().add(txtPrecioProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 60, 160, 40));
 
         codigoBarra.setBackground(new java.awt.Color(255, 255, 255));
+        codigoBarra.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         codigoBarra.setForeground(new java.awt.Color(0, 0, 0));
         codigoBarra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 codigoBarraActionPerformed(evt);
             }
         });
-        getContentPane().add(codigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 190, 32));
+        getContentPane().add(codigoBarra, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 260, 40));
 
         nombreProducto.setBackground(new java.awt.Color(255, 255, 255));
+        nombreProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         nombreProducto.setForeground(new java.awt.Color(0, 0, 0));
         nombreProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nombreProductoActionPerformed(evt);
             }
         });
-        getContentPane().add(nombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 160, 30));
+        getContentPane().add(nombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 60, 250, 40));
 
         txtSubTotal.setBackground(new java.awt.Color(255, 255, 255));
         txtSubTotal.setFont(new java.awt.Font("Segoe UI", 1, 32)); // NOI18N
@@ -124,17 +130,17 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 txtSubTotalActionPerformed(evt);
             }
         });
-        getContentPane().add(txtSubTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, 250, 80));
+        getContentPane().add(txtSubTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 70, 280, 90));
 
         titTotal.setBackground(new java.awt.Color(255, 255, 255));
         titTotal.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         titTotal.setForeground(new java.awt.Color(0, 0, 0));
         titTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titTotal.setText("TOTAL");
-        titTotal.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        getContentPane().add(titTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 60, 80, 50));
+        titTotal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        getContentPane().add(titTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 10, 280, 50));
 
-        registroVentas.setBackground(new java.awt.Color(51, 255, 0));
+        registroVentas.setBackground(new java.awt.Color(0, 255, 255));
         registroVentas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         registroVentas.setForeground(new java.awt.Color(0, 0, 0));
         registroVentas.setText("Registrar Venta");
@@ -143,12 +149,12 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 registroVentasActionPerformed(evt);
             }
         });
-        getContentPane().add(registroVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 380, 160, 110));
+        getContentPane().add(registroVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 470, 190, 130));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablaDescripcionVenta.setBackground(new java.awt.Color(255, 255, 255));
-        tablaDescripcionVenta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tablaDescripcionVenta.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         tablaDescripcionVenta.setForeground(new java.awt.Color(0, 0, 0));
         tablaDescripcionVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,6 +164,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 "Cant", "Detalle", "Tipo", "Precio Unitario", "Precio Total"
             }
         ));
+        tablaDescripcionVenta.setRowHeight(30);
         jScrollPane1.setViewportView(tablaDescripcionVenta);
         if (tablaDescripcionVenta.getColumnModel().getColumnCount() > 0) {
             tablaDescripcionVenta.getColumnModel().getColumn(0).setMaxWidth(55);
@@ -167,9 +174,9 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             tablaDescripcionVenta.getColumnModel().getColumn(4).setMaxWidth(180);
         }
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 420));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 410));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 630, 410));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 830, 410));
 
         tipoPago.setBackground(new java.awt.Color(255, 255, 255));
         tipoPago.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -180,14 +187,14 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 tipoPagoActionPerformed(evt);
             }
         });
-        getContentPane().add(tipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 300, 160, -1));
+        getContentPane().add(tipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 400, 190, 40));
 
         titTipoPago.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titTipoPago.setForeground(new java.awt.Color(0, 0, 0));
         titTipoPago.setText("Tipo de Pago:");
-        getContentPane().add(titTipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 260, 150, 20));
+        getContentPane().add(titTipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 360, 150, 30));
 
-        jButtonLimpiar.setBackground(new java.awt.Color(204, 0, 0));
+        jButtonLimpiar.setBackground(new java.awt.Color(255, 0, 0));
         jButtonLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButtonLimpiar.setForeground(new java.awt.Color(0, 0, 0));
         jButtonLimpiar.setText("Limpiar");
@@ -196,7 +203,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 jButtonLimpiarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 180, 160, 40));
+        getContentPane().add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 190, 150, 40));
 
         jBotonBuscar.setBackground(new java.awt.Color(0, 153, 204));
         jBotonBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -207,7 +214,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 jBotonBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 190, -1));
+        getContentPane().add(jBotonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 117, 260, 30));
 
         jBotonAnadir.setBackground(new java.awt.Color(0, 153, 204));
         jBotonAnadir.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -218,18 +225,33 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 jBotonAnadirActionPerformed(evt);
             }
         });
-        getContentPane().add(jBotonAnadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, 250, -1));
+        getContentPane().add(jBotonAnadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 117, 250, 30));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Facturacion");
-        jLabel1.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 0, 200, -1));
+        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 290, 190, 40));
+
+        BotonEliminar.setBackground(new java.awt.Color(255, 0, 0));
+        BotonEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BotonEliminar.setForeground(new java.awt.Color(0, 0, 0));
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 120, 160, 40));
 
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("solo para uso de producto sin precio fijo o codigo de barra");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Seleccione la Cuenta:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 250, 190, 30));
 
         jwallpaper.setBackground(new java.awt.Color(0, 0, 0));
         jwallpaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo4.jpg"))); // NOI18N
@@ -329,9 +351,11 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
 
     //metodo de busqueda para casos particulares
     private void jBotonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarActionPerformed
+        //Instancias
         Modelo_Producto pro = new Modelo_Producto();
         control_Producto cont = new control_Producto();
 
+        //Verificamos tener el codigo de barra
         if (codigoBarra.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Complete el codigo de barra");
             codigoBarra.setBackground(Color.red);
@@ -393,6 +417,20 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "El producto seleccionado no existe");
         }
     }//GEN-LAST:event_jBotonAnadirActionPerformed
+
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+        
+        DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
+
+        // Verificar si se ha seleccionado una fila en la tabla
+        int selectedRow = tablaDescripcionVenta.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminarlo de la 'Tabla'");
+            return;
+
+        }
+        model.removeRow(selectedRow);
+    }//GEN-LAST:event_BotonEliminarActionPerformed
 
     //metodo privado, actulizacion del monto total de venta
     private void actualizarTotal() {
@@ -475,10 +513,12 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotonEliminar;
     private javax.swing.JTextField codigoBarra;
     private javax.swing.JButton jBotonAnadir;
     private javax.swing.JButton jBotonBuscar;
     private javax.swing.JButton jButtonLimpiar;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

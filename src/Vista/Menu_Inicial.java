@@ -3,12 +3,14 @@ package Vista;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 
-public class Menu extends javax.swing.JFrame {
+public class Menu_Inicial extends javax.swing.JFrame {
 
     private static JDesktopPane jDesktopPane_menu;
+    private String rolUsuario;
     
-    public Menu() {
+    public Menu_Inicial(String rol) {
         initComponents();
+        this.rolUsuario = rol;
         this.setSize(new Dimension(1250, 800));
         this.setTitle("Sistema de Facturacion");
         this.setExtendedState(this.MAXIMIZED_BOTH);
@@ -22,23 +24,37 @@ public class Menu extends javax.swing.JFrame {
         this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto - 110));
         this.add(jDesktopPane_menu);
 
+        configurarMenuPorRol();
+        
     }
 
-    @SuppressWarnings("unchecked")
+    private void configurarMenuPorRol() {
+        if ("empleado".equals(rolUsuario)) {
+            // Si el usuario es un empleado, deshabilitar ciertos menús
+            jMenuProducto.setEnabled(false); // Productos
+            jMenuHistorial.setEnabled(false); // Historial
+            jMenuCategoria.setEnabled(false); // Categoría
+            jMenuCuentas.setEnabled(false);//Cuentas
+        }
+    }
+        @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jMenuBarra = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        jMenuProducto = new javax.swing.JMenu();
         Ingresar_Producto = new javax.swing.JMenuItem();
         Modificar_Producto = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuHistorial = new javax.swing.JMenu();
         Ver_Historial = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        jMenuFacturacion = new javax.swing.JMenu();
         menuIngresoVentas = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        jMenuCategoria = new javax.swing.JMenu();
         jNuevaCategoria = new javax.swing.JMenuItem();
         jGestionCategoria = new javax.swing.JMenuItem();
+        jMenuCuentas = new javax.swing.JMenu();
+        jNuevaCuenta = new javax.swing.JMenuItem();
+        jGestionCuentas = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu_nuevo");
@@ -50,10 +66,10 @@ public class Menu extends javax.swing.JFrame {
         jMenuBarra.setOpaque(true);
         jMenuBarra.setPreferredSize(new java.awt.Dimension(130, 30));
 
-        jMenu1.setBackground(new java.awt.Color(0, 102, 153));
-        jMenu1.setText("Productos");
-        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenu1.setPreferredSize(new java.awt.Dimension(150, 50));
+        jMenuProducto.setBackground(new java.awt.Color(0, 102, 153));
+        jMenuProducto.setText("Productos");
+        jMenuProducto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuProducto.setPreferredSize(new java.awt.Dimension(150, 50));
 
         Ingresar_Producto.setBackground(new java.awt.Color(255, 255, 255));
         Ingresar_Producto.setForeground(new java.awt.Color(0, 0, 0));
@@ -63,7 +79,7 @@ public class Menu extends javax.swing.JFrame {
                 Ingresar_ProductoActionPerformed(evt);
             }
         });
-        jMenu1.add(Ingresar_Producto);
+        jMenuProducto.add(Ingresar_Producto);
 
         Modificar_Producto.setBackground(new java.awt.Color(255, 255, 255));
         Modificar_Producto.setForeground(new java.awt.Color(0, 0, 0));
@@ -73,14 +89,14 @@ public class Menu extends javax.swing.JFrame {
                 Modificar_ProductoActionPerformed(evt);
             }
         });
-        jMenu1.add(Modificar_Producto);
+        jMenuProducto.add(Modificar_Producto);
 
-        jMenuBarra.add(jMenu1);
+        jMenuBarra.add(jMenuProducto);
 
-        jMenu2.setBackground(new java.awt.Color(0, 102, 153));
-        jMenu2.setText("Historial");
-        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenu2.setPreferredSize(new java.awt.Dimension(150, 50));
+        jMenuHistorial.setBackground(new java.awt.Color(0, 102, 153));
+        jMenuHistorial.setText("Historial");
+        jMenuHistorial.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuHistorial.setPreferredSize(new java.awt.Dimension(150, 50));
 
         Ver_Historial.setForeground(new java.awt.Color(0, 0, 0));
         Ver_Historial.setText("Ver Historial");
@@ -89,13 +105,13 @@ public class Menu extends javax.swing.JFrame {
                 Ver_HistorialActionPerformed(evt);
             }
         });
-        jMenu2.add(Ver_Historial);
+        jMenuHistorial.add(Ver_Historial);
 
-        jMenuBarra.add(jMenu2);
+        jMenuBarra.add(jMenuHistorial);
 
-        jMenu3.setBackground(new java.awt.Color(0, 102, 153));
-        jMenu3.setText("Facturacion        ");
-        jMenu3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuFacturacion.setBackground(new java.awt.Color(0, 102, 153));
+        jMenuFacturacion.setText("Facturacion        ");
+        jMenuFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         menuIngresoVentas.setBackground(new java.awt.Color(255, 255, 255));
         menuIngresoVentas.setForeground(new java.awt.Color(0, 0, 0));
@@ -105,13 +121,13 @@ public class Menu extends javax.swing.JFrame {
                 menuIngresoVentasActionPerformed(evt);
             }
         });
-        jMenu3.add(menuIngresoVentas);
+        jMenuFacturacion.add(menuIngresoVentas);
 
-        jMenuBarra.add(jMenu3);
+        jMenuBarra.add(jMenuFacturacion);
 
-        jMenu4.setBackground(new java.awt.Color(0, 102, 153));
-        jMenu4.setText("Categoria");
-        jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuCategoria.setBackground(new java.awt.Color(0, 102, 153));
+        jMenuCategoria.setText(" Categorias      ");
+        jMenuCategoria.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jNuevaCategoria.setBackground(new java.awt.Color(255, 255, 255));
         jNuevaCategoria.setForeground(new java.awt.Color(0, 0, 0));
@@ -121,7 +137,7 @@ public class Menu extends javax.swing.JFrame {
                 jNuevaCategoriaActionPerformed(evt);
             }
         });
-        jMenu4.add(jNuevaCategoria);
+        jMenuCategoria.add(jNuevaCategoria);
 
         jGestionCategoria.setForeground(new java.awt.Color(0, 0, 0));
         jGestionCategoria.setText("Gestion de Categoria");
@@ -130,9 +146,30 @@ public class Menu extends javax.swing.JFrame {
                 jGestionCategoriaActionPerformed(evt);
             }
         });
-        jMenu4.add(jGestionCategoria);
+        jMenuCategoria.add(jGestionCategoria);
 
-        jMenuBarra.add(jMenu4);
+        jMenuBarra.add(jMenuCategoria);
+
+        jMenuCuentas.setText(" Cuentas      ");
+        jMenuCuentas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        jNuevaCuenta.setText("Nueva Cuenta");
+        jNuevaCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jNuevaCuentaActionPerformed(evt);
+            }
+        });
+        jMenuCuentas.add(jNuevaCuenta);
+
+        jGestionCuentas.setText("Gestion de Cuentas");
+        jGestionCuentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jGestionCuentasActionPerformed(evt);
+            }
+        });
+        jMenuCuentas.add(jGestionCuentas);
+
+        jMenuBarra.add(jMenuCuentas);
 
         setJMenuBar(jMenuBarra);
 
@@ -150,12 +187,14 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Seccion de Facturacion
     private void menuIngresoVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuIngresoVentasActionPerformed
         Ventana_Ventas ventanaVentas = new Ventana_Ventas();
         jDesktopPane_menu.add(ventanaVentas);
         ventanaVentas.setVisible(true);
     }//GEN-LAST:event_menuIngresoVentasActionPerformed
 
+    //Seccion Productos
     private void Ingresar_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Ingresar_ProductoActionPerformed
         Ingreso_Productos ingresoProducto = new Ingreso_Productos();
         jDesktopPane_menu.add(ingresoProducto);
@@ -168,12 +207,14 @@ public class Menu extends javax.swing.JFrame {
         gestionProducto.setVisible(true);
     }//GEN-LAST:event_Modificar_ProductoActionPerformed
 
+    //Historial de ventas
     private void Ver_HistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Ver_HistorialActionPerformed
         Historial_Ventas historial = new Historial_Ventas();
         jDesktopPane_menu.add(historial);
         historial.setVisible(true);
     }//GEN-LAST:event_Ver_HistorialActionPerformed
 
+    //Seccion de Categorias
     private void jNuevaCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNuevaCategoriaActionPerformed
         Ingreso_Categoria_Proveedor cateProveedor = new Ingreso_Categoria_Proveedor();
         jDesktopPane_menu.add(cateProveedor);
@@ -185,6 +226,15 @@ public class Menu extends javax.swing.JFrame {
         jDesktopPane_menu.add(gCatProveedor);
         gCatProveedor.setVisible(true);
     }//GEN-LAST:event_jGestionCategoriaActionPerformed
+
+    //Seccion de Cuentas
+    private void jNuevaCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNuevaCuentaActionPerformed
+        
+    }//GEN-LAST:event_jNuevaCuentaActionPerformed
+
+    private void jGestionCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGestionCuentasActionPerformed
+        
+    }//GEN-LAST:event_jGestionCuentasActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -200,22 +250,22 @@ public class Menu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu_Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu_Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu_Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu_Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Menu().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Menu_Inicial().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -223,12 +273,15 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem Modificar_Producto;
     private javax.swing.JMenuItem Ver_Historial;
     private javax.swing.JMenuItem jGestionCategoria;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuItem jGestionCuentas;
     private javax.swing.JMenuBar jMenuBarra;
+    private javax.swing.JMenu jMenuCategoria;
+    private javax.swing.JMenu jMenuCuentas;
+    private javax.swing.JMenu jMenuFacturacion;
+    private javax.swing.JMenu jMenuHistorial;
+    private javax.swing.JMenu jMenuProducto;
     private javax.swing.JMenuItem jNuevaCategoria;
+    private javax.swing.JMenuItem jNuevaCuenta;
     private javax.swing.JMenuItem menuIngresoVentas;
     // End of variables declaration//GEN-END:variables
 }

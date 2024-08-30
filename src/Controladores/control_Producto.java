@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class control_Producto {
@@ -22,14 +21,14 @@ public class control_Producto {
 
     private List<Modelo_Producto> cargarProductos() {
         List<Modelo_Producto> productos = new ArrayList<>();
-        String sql = "SELECT Cod_Barra, nombre, precio_Actual, tipo, categoria_id FROM Producto";
+        String sql = "SELECT Cod_Barra, nombre_Producto, precio_Actual, tipo, categoria_id FROM Producto";
 
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql); ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
                 Modelo_Producto producto = new Modelo_Producto();
                 producto.setCod_barra(rs.getString("Cod_Barra"));
-                producto.setNombre(rs.getString("nombre"));
+                producto.setNombre(rs.getString("nombre_Producto"));
                 producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
                 producto.setTipo(rs.getString("tipo"));
                 productos.add(producto);
@@ -63,7 +62,7 @@ public class control_Producto {
             consulta.setString(1, objeto.getCod_barra());//Cod_Barra
             consulta.setString(2, objeto.getNombre());
             consulta.setString(3, objeto.getTipo());
-            consulta.setString(4, objeto.getCategoria());
+            consulta.setInt(4, objeto.getCategoria());
             consulta.setDouble(5, objeto.getPrecio_Actual());
 
             if (consulta.executeUpdate() > 0) {
@@ -106,7 +105,7 @@ public class control_Producto {
     //metodo para buscar un producto 
     public Modelo_Producto buscarProductoUno(String codigoBarra) {
         Modelo_Producto producto = null;
-        String sql = "SELECT nombre, precio_Actual, tipo, categoria_id FROM Producto WHERE Cod_Barra = ?";
+        String sql = "SELECT nombre_Producto, precio_Actual, tipo, categoria_id FROM Producto WHERE Cod_Barra = ?";
 
         try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
 
@@ -115,10 +114,10 @@ public class control_Producto {
 
             if (rs.next()) {
                 producto = new Modelo_Producto();
-                producto.setNombre(rs.getString("nombre"));
+                producto.setNombre(rs.getString("nombre_Producto"));
                 producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
                 producto.setTipo(rs.getString("tipo"));
-                producto.setCategoria(rs.getString("categoria_id"));
+                producto.setCategoria(rs.getInt("categoria_id"));
             }
         } catch (SQLException e) {
             System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());

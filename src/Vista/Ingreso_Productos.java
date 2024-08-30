@@ -40,7 +40,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
 
         // Agregar categorías al JComboBox
         for (Modelo_categoria categoria : categorias) {
-            jComboCategoria.addItem(categoria.getDescripcion());
+            jComboCategoria.addItem(categoria);
         }
     }
 
@@ -104,7 +104,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
 
         comboTipoProducto.setBackground(new java.awt.Color(255, 255, 255));
         comboTipoProducto.setForeground(new java.awt.Color(0, 0, 0));
-        comboTipoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kiosco", "Panaderia", "Comida", "Postre" }));
+        comboTipoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kiosco", "Panaderia", "Comida", "Dulce" }));
         getContentPane().add(comboTipoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, 190, 30));
 
         botonIngresarProd.setBackground(new java.awt.Color(0, 204, 204));
@@ -164,14 +164,16 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Complete el campo de codigo barra o el nombre del producto");
             txtCodigoBarra.setBackground(Color.red);
             txtNombre1.setBackground(Color.red);
-
+            
         } else {
             //consulta para ver si el producto ya existe
             if (!cont.existeProducto(txtCodigoBarra.getText().trim())) {
                 try {
-
+                    
+                    Modelo_categoria categoriaSeleccionada = (Modelo_categoria) jComboCategoria.getSelectedItem();
                     pro.setCod_barra(txtCodigoBarra.getText().trim());
                     pro.setNombre(txtNombre1.getText().trim());
+                    pro.setCategoria(categoriaSeleccionada.getId());
                     pro.setTipo(comboTipoProducto.getSelectedItem().toString());
                     String precioTXT = "";
                     double Precio = 0.00;
@@ -222,7 +224,7 @@ public class Ingreso_Productos extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonIngresarProd;
     private javax.swing.JComboBox<String> comboTipoProducto;
-    private javax.swing.JComboBox<String> jComboCategoria;
+    private javax.swing.JComboBox<Object> jComboCategoria;
     private javax.swing.JLabel jLabel_Wallpaper;
     private javax.swing.JLabel titCategoria;
     private javax.swing.JLabel titCodigoBarra1;

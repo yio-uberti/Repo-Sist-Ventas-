@@ -1,26 +1,26 @@
 package Modelos;
 
-public class Modelo_categoria {
-
+public class Modelo_Cuenta {
+    
+    private int id;
     private String descripcion;
-    private int Id;
-
-    public Modelo_categoria() {
+    
+    public Modelo_Cuenta(){
         this.descripcion = "";
-        this.Id = 0;
+        this.id = 0;
     }
-
-    public Modelo_categoria(String descripcion) {
+    
+    public Modelo_Cuenta (String descripcion){
         this.descripcion = descripcion;
-        this.Id = Id;
+        this.id = id;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescripcion() {
@@ -33,7 +33,8 @@ public class Modelo_categoria {
 
     @Override
     public String toString() {
-        return this.descripcion; // Muestra la descripción en el JComboBox
+        return this.descripcion;
     }
-
+    
+    
 }

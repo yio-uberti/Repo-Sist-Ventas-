@@ -2,7 +2,6 @@ package Controladores;
 
 import Modelos.Modelo_Venta;
 import java.sql.*;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +9,7 @@ import java.util.*;
 
 public class control_Ventas {
 
-    public Modelo_Venta registrarVenta(double montoKiosco, double montoComida, double montoPanaderia, double montoPostre, double montoTotal, String hora, String detalle) {
+    public Modelo_Venta registrarVenta(double montoKiosco, double montoComida, double montoPanaderia, double montoDulce, double montoTotal, String hora, String detalle) {
         Modelo_Venta venta = new Modelo_Venta();
         String sql = "INSERT INTO Venta(detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta) values (?, ?, ?, ?, ?, ?, ?)";
 
@@ -19,7 +18,7 @@ public class control_Ventas {
             pst.setDouble(2, montoKiosco);
             pst.setDouble(3, montoComida);
             pst.setDouble(4, montoPanaderia);
-            pst.setDouble(5, montoPostre);
+            pst.setDouble(5, montoDulce);
             pst.setDouble(6, montoTotal);
             pst.setString(7, hora);
 
@@ -34,14 +33,14 @@ public class control_Ventas {
                         venta.setMontoKiosco(montoKiosco);
                         venta.setMontoComida(montoComida);
                         venta.setMontoPanaderia(montoPanaderia);
-                        venta.setMontoDulce(montoPostre);
+                        venta.setMontoDulce(montoDulce);
                         venta.setMontoTotal(montoTotal);
                         venta.setHora(hora);
                     }
                 }
             }
 
-            System.out.println("Resgitro de venta Exitoso");
+            System.out.println("Registro de venta Exitoso");
 
         } catch (Exception e) {
             System.out.println("Error al registrar la venta: " + e.getMessage());
