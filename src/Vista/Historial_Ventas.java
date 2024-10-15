@@ -3,15 +3,23 @@ package Vista;
 import Controladores.control_Ventas;
 import Modelos.Modelo_Venta;
 import java.awt.*;
-import java.sql.*;
-import java.text.SimpleDateFormat;
 import javax.swing.JDesktopPane;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.util.List;
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
+import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Historial_Ventas extends javax.swing.JInternalFrame {
 
@@ -23,6 +31,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 JDesktopPane desktopPane = getDesktopPane();
                 if (desktopPane != null) {
@@ -178,6 +187,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 320, -1));
 
         txtFecha.setBackground(new java.awt.Color(255, 255, 255));
+        txtFecha.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtFecha.setForeground(new java.awt.Color(0, 0, 0));
         getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 40, 160, 40));
 
@@ -304,58 +314,150 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
 
     //Busca la ventas segun el tipo de pago
     private void jBotonBuscarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarPagoActionPerformed
-        control_Ventas cont = new control_Ventas();
-        String detalle = (String) jTipodePago.getSelectedItem();
+        // Obtener tipo de pago del JComboBox
+        String tipoPago = (String) jTipodePago.getSelectedItem();
 
-        List<Modelo_Venta> ventas = cont.buscarSegunTipo(detalle);
+        // Obtener la fecha actual
+        LocalDate today = LocalDate.now();
+        String fecha = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        if (!ventas.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
-            actualizarTabla(ventas);
-            
-            // Calcular el total de ventas y los totales por tipo de pago
-                double totalVenta = 0;
-                double totalEfectivo = 0;
-                double totalTransferencia = 0;
+        // Construir la URL
+        String urlAPI = "http://localhost:8080/ApiRest/Ven/por-tipo-y-fecha?tipoPago=" + tipoPago + "&fecha=" + fecha;
 
-                for (Modelo_Venta venta : ventas) {
-                    totalVenta += venta.getMontoTotal();
-                    if ("Efectivo".equals(venta.getTipo())) {
-                        totalEfectivo += venta.getMontoTotal();
-                    } else if ("Transferencia".equals(venta.getTipo())) {
-                        totalTransferencia += venta.getMontoTotal();
-                    }
-                }
-
-                // Mostrar los totales en los campos de texto
-                txtTotalGeneral.setText(String.valueOf(totalVenta));
-                txtEfectivo.setText(String.valueOf(totalEfectivo));
-                txtTransferencia.setText(String.valueOf(totalTransferencia));
-            
-            
-        } else {
-            JOptionPane.showMessageDialog(this, "Ventas no encontradas");
-        }
-
-    }//GEN-LAST:event_jBotonBuscarPagoActionPerformed
-
-    private void BotonGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGeneralActionPerformed
-        //Instanciamos la conexion y la tabla
-        Connection con = Conexion.Conexion_BD.conectar();
         DefaultTableModel model = new DefaultTableModel();
 
-        //Formateamos la fecha
+        try {
+            // Configurar conexión
+            URL url = new URL(urlAPI);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+
+            int responseCode = con.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                System.out.println("Error en la respuesta: " + responseCode);
+                return;
+            }
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            StringBuilder content = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            // Cerrar las conexiones
+            in.close();
+            con.disconnect();
+
+            JSONArray ventasArray = new JSONArray(content.toString());
+
+            model.addColumn("Detalle");
+            model.addColumn("Kiosco");
+            model.addColumn("Panadería");
+            model.addColumn("Comida");
+            model.addColumn("Dulces");
+            model.addColumn("Monto");
+            model.addColumn("Hora de Venta");
+
+            double totalVenta = 0, totalEfectivo = 0, totalTransferencia = 0,
+                    totalComida = 0, totalKiosco = 0, totalPanaderia = 0, totalDulce = 0;
+
+            // No necesitas formatear la fecha aquí
+            for (int i = 0; i < ventasArray.length(); i++) {
+                JSONObject venta = ventasArray.getJSONObject(i);
+                Object[] row = new Object[7];
+                row[0] = venta.getString("detalle");
+                row[1] = venta.getDouble("monto_kiosco");
+                row[2] = venta.getDouble("monto_panaderia");
+                row[3] = venta.getDouble("monto_comida");
+                row[4] = venta.getDouble("monto_postre");
+                row[5] = venta.getDouble("monto_total");
+
+                totalVenta += venta.getDouble("monto_total");
+
+                if ("Efectivo".equals(venta.getString("detalle"))) {
+                    totalEfectivo += venta.getDouble("monto_total");
+                } else if ("Transferencia".equals(venta.getString("detalle"))) {
+                    totalTransferencia += venta.getDouble("monto_total");
+                }
+
+                totalKiosco += venta.getDouble("monto_kiosco");
+                totalPanaderia += venta.getDouble("monto_panaderia");
+                totalComida += venta.getDouble("monto_comida");
+                totalDulce += venta.getDouble("monto_postre");
+
+                // Extraer la hora completa de la venta
+                String horaVenta = venta.getString("hora_venta");
+                // Parsear la cadena a LocalDateTime
+                LocalDateTime fechaHora = LocalDateTime.parse(horaVenta);
+
+                // Crear formateadores para el día, mes y hora
+                DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("dd/MM");
+                DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                // Formatear la fecha y la hora
+                String fechaFormateada = fechaHora.format(fechaFormatter);//dia y mes
+                String horaFormateada = fechaHora.format(horaFormatter);//hora y minuto
+
+                // Combinar la fecha y la hora en el formato deseado
+                row[6] = fechaFormateada + " " + horaFormateada;
+
+                model.addRow(row);
+            }
+
+            Historial_Ventas.jTableDescripcionHistorial.setModel(model);
+            txtTotalGeneral.setText(String.valueOf(totalVenta));
+            //Ventas segun tipo pago
+            txtEfectivo.setText(String.valueOf(totalEfectivo));
+            txtTransferencia.setText(String.valueOf(totalTransferencia));
+
+            //Clasificacion del usuario
+            txtKiosco.setText(String.valueOf(totalKiosco));
+            txtPanaderia.setText(String.valueOf(totalPanaderia));
+            txtComida.setText(String.valueOf(totalComida));
+            txtDulce.setText(String.valueOf(totalDulce));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar las ventas: " + e.getMessage());
+        }
+    }//GEN-LAST:event_jBotonBuscarPagoActionPerformed
+
+    //Busqueda de todas las ventas realizadas en el dia 
+    private void BotonGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGeneralActionPerformed
+        // Formateamos la fecha
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormat.format(new Date());
 
-        //consulta sql 
-        String sql = "select detalle, montoKiosco, montoComida, montoPanaderia, montoPostre, montoTotal, horaVenta from Venta "
-                + "where DATE(horaVenta) = '" + fechaActual + "'";
-        Statement st;
+        // URL de tu API que devuelve las ventas del día
+        String urlAPI = "http://localhost:8080/ApiRest/Ven/por-fecha?fecha=" + fechaActual;
+
+        DefaultTableModel model = new DefaultTableModel();
 
         try {
-            st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            // Hacer una solicitud GET a la API
+            URL url = new URL(urlAPI);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+
+            // Leer la respuesta de la API
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            // Cerrar las conexiones
+            in.close();
+            con.disconnect();
+
+            // Parsear el JSON usando org.json
+            JSONArray ventasArray = new JSONArray(content.toString());
 
             // Agregar columnas al modelo
             model.addColumn("Detalle");
@@ -366,97 +468,183 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
             model.addColumn("Monto");
             model.addColumn("Hora de Venta");
 
-            // Formateador para la fecha y hora
-            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // Para almacenar el total de la venta
+            double totalVenta = 0, totalEfectivo = 0, totalTransferencia = 0,
+                    totalComida = 0, totalKiosco = 0, totalPanaderia = 0, totalDulce = 0;
+
+            // Formatos de fecha
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Ajusta a ISO 8601
             SimpleDateFormat desiredFormat = new SimpleDateFormat("dd/MM HH:mm");
 
-            //Para almacenar el total de la venta
-            double totalVenta = 0;
-            double totalEfectivo = 0;
-            double totalTransferencia = 0;
+            // Iterar a través del JSONArray de ventas
+            for (int i = 0; i < ventasArray.length(); i++) {
+                JSONObject venta = ventasArray.getJSONObject(i);
+                Object[] row = new Object[7];
+                row[0] = venta.getString("detalle");
+                row[1] = venta.getDouble("monto_kiosco");
+                row[2] = venta.getDouble("monto_panaderia");
+                row[3] = venta.getDouble("monto_comida");
+                row[4] = venta.getDouble("monto_postre");
+                row[5] = venta.getDouble("monto_total");
 
-            // Iterar a través del ResultSet y agregar filas al modelo
-            while (rs.next()) {
-                Object[] row = new Object[7]; // Array para almacenar los datos de cada fila
-                row[0] = rs.getString("detalle");
-                row[1] = rs.getDouble("montoKiosco");
-                row[2] = rs.getDouble("montoPanaderia");
-                row[3] = rs.getDouble("montoComida");
-                row[4] = rs.getDouble("montoPostre");
-                row[5] = rs.getDouble("montoTotal");
+                totalVenta += venta.getDouble("monto_total");
 
-                // Sumar el montoTotal al totalVenta
-                totalVenta += rs.getDouble("montoTotal");
-
-                // Sumar los montos según el tipo de pago
-                String tipoPago = rs.getString("detalle");
-                if ("Efectivo".equals(tipoPago)) {
-                    totalEfectivo += rs.getDouble("montoTotal");
-                } else if ("Transferencia".equals(tipoPago)) {
-                    totalTransferencia += rs.getDouble("montoTotal");
+                if ("Efectivo".equals(venta.getString("detalle"))) {
+                    totalEfectivo += venta.getDouble("monto_total");
+                } else if ("Transferencia".equals(venta.getString("detalle"))) {
+                    totalTransferencia += venta.getDouble("monto_total");
                 }
+
+                totalKiosco += venta.getDouble("monto_kiosco");
+                totalPanaderia += venta.getDouble("monto_panaderia");
+                totalComida += venta.getDouble("monto_comida");
+                totalDulce += venta.getDouble("monto_postre");
 
                 // Formatear la fecha y hora
-                String horaVenta = rs.getString("horaVenta");
+                String horaVenta = venta.getString("hora_venta");
                 try {
-                    Date date = originalFormat.parse(horaVenta);
-                    row[6] = desiredFormat.format(date);
+                    Date fechaHora = inputFormat.parse(horaVenta); // Usar inputFormat para parsear
+                    row[6] = desiredFormat.format(fechaHora); // Formatear usando desiredFormat
                 } catch (ParseException e) {
-                    row[6] = horaVenta;
+                    e.printStackTrace();
+                    row[6] = "Error en formato"; // O algún valor por defecto
                 }
 
-                model.addRow(row); // Agregar fila al modelo
+                model.addRow(row);
             }
 
             // Asignar el modelo a la tabla jTableDescripcionHistorial
-            jTableDescripcionHistorial.getTableHeader().setReorderingAllowed(false);//para bloquear las columnas del usuario
             Historial_Ventas.jTableDescripcionHistorial.setModel(model);
-
             txtTotalGeneral.setText(String.valueOf(totalVenta));
+            //Ventas segun tipo de pago
             txtEfectivo.setText(String.valueOf(totalEfectivo));
             txtTransferencia.setText(String.valueOf(totalTransferencia));
 
-        } catch (SQLException e) {
+            //Clasificacion del usuario
+            txtKiosco.setText(String.valueOf(totalKiosco));
+            txtPanaderia.setText(String.valueOf(totalPanaderia));
+            txtComida.setText(String.valueOf(totalComida));
+            txtDulce.setText(String.valueOf(totalDulce));
+
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al cargar las ventas: " + e.getMessage());
         }
-
     }//GEN-LAST:event_BotonGeneralActionPerformed
 
     private void jBotonBuscarFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarFechaActionPerformed
-        control_Ventas cont = new control_Ventas();
         String fecha = txtFecha.getText().trim(); // Obtener la fecha desde el campo de texto
 
         if (!fecha.matches("\\d{2}/\\d{2}/\\d{4}")) { // Validar el formato de la fecha
             JOptionPane.showMessageDialog(this, "El formato de la fecha es incorrecto. Use el formato DD/MM/AAAA");
         } else {
-            List<Modelo_Venta> ventas = cont.buscarPorFecha(fecha);
 
-            if (!ventas.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Ventas encontradas con éxito");
-                actualizarTabla(ventas);
+            // Convertir la fecha de DD/MM/AAAA a yyyy-MM-dd
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-                // Calcular el total de ventas y los totales por tipo de pago
-                double totalVenta = 0;
-                double totalEfectivo = 0;
-                double totalTransferencia = 0;
+            // Parsear la fecha y luego formatearla
+            LocalDate fechaConvertida = LocalDate.parse(fecha, inputFormatter);
+            String fechaFormateada = fechaConvertida.format(outputFormatter);
 
-                for (Modelo_Venta venta : ventas) {
-                    totalVenta += venta.getMontoTotal();
-                    if ("Efectivo".equals(venta.getTipo())) {
-                        totalEfectivo += venta.getMontoTotal();
-                    } else if ("Transferencia".equals(venta.getTipo())) {
-                        totalTransferencia += venta.getMontoTotal();
-                    }
+            String urlAPI = "http://localhost:8080/ApiRest/Ven/por-fecha?fecha=" + fechaFormateada;
+
+            DefaultTableModel model = new DefaultTableModel();
+
+            try {
+
+                // Hacer una solicitud GET a la API
+                URL url = new URL(urlAPI);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setDoOutput(true);
+
+                // Leer la respuesta de la API
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
                 }
 
-                // Mostrar los totales en los campos de texto
+                // Cerrar las conexiones
+                in.close();
+                con.disconnect();
+
+                // Parsear el JSON usando org.json
+                JSONArray ventasArray = new JSONArray(content.toString());
+
+                // Agregar columnas al modelo
+                model.addColumn("Detalle");
+                model.addColumn("Kiosco");
+                model.addColumn("Panaderia");
+                model.addColumn("Comida");
+                model.addColumn("Dulces");
+                model.addColumn("Monto");
+                model.addColumn("Hora de Venta");
+
+                // Para almacenar el total de la venta
+                double totalVenta = 0, totalEfectivo = 0, totalTransferencia = 0,
+                        totalComida = 0, totalKiosco = 0, totalPanaderia = 0, totalDulce = 0;
+
+                // Formatos de fecha
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Ajusta a ISO 8601
+                SimpleDateFormat desiredFormat = new SimpleDateFormat("dd/MM HH:mm");
+
+                // Iterar a través del JSONArray de ventas
+                for (int i = 0; i < ventasArray.length(); i++) {
+                    JSONObject venta = ventasArray.getJSONObject(i);
+                    Object[] row = new Object[7];
+                    row[0] = venta.getString("detalle");
+                    row[1] = venta.getDouble("monto_kiosco");
+                    row[2] = venta.getDouble("monto_panaderia");
+                    row[3] = venta.getDouble("monto_comida");
+                    row[4] = venta.getDouble("monto_postre");
+                    row[5] = venta.getDouble("monto_total");
+
+                    totalVenta += venta.getDouble("monto_total");
+
+                    if ("Efectivo".equals(venta.getString("detalle"))) {
+                        totalEfectivo += venta.getDouble("monto_total");
+                    } else if ("Transferencia".equals(venta.getString("detalle"))) {
+                        totalTransferencia += venta.getDouble("monto_total");
+                    }
+
+                    totalKiosco += venta.getDouble("monto_kiosco");
+                    totalPanaderia += venta.getDouble("monto_panaderia");
+                    totalComida += venta.getDouble("monto_comida");
+                    totalDulce += venta.getDouble("monto_postre");
+
+                    // Formatear la fecha y hora
+                    String horaVenta = venta.getString("hora_venta");
+                    try {
+                        Date fechaHora = inputFormat.parse(horaVenta); // Usar inputFormat para parsear
+                        row[6] = desiredFormat.format(fechaHora); // Formatear usando desiredFormat
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        row[6] = "Error en formato"; // O algún valor por defecto
+                    }
+
+                    model.addRow(row);
+                }
+
+                // Asignar el modelo a la tabla jTableDescripcionHistorial
+                Historial_Ventas.jTableDescripcionHistorial.setModel(model);
                 txtTotalGeneral.setText(String.valueOf(totalVenta));
+                //Ventas segun tipo de pago
                 txtEfectivo.setText(String.valueOf(totalEfectivo));
                 txtTransferencia.setText(String.valueOf(totalTransferencia));
 
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontraron ventas para la fecha indicada");
+                //Clasificacion del usuario
+                txtKiosco.setText(String.valueOf(totalKiosco));
+                txtPanaderia.setText(String.valueOf(totalPanaderia));
+                txtComida.setText(String.valueOf(totalComida));
+                txtDulce.setText(String.valueOf(totalDulce));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al cargar las ventas: " + e.getMessage());
             }
         }
         txtFecha.setText("");

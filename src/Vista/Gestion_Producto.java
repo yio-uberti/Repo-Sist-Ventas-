@@ -4,16 +4,19 @@ package Vista;
 import Controladores.control_Cat_Proveedor;
 import Modelos.Modelo_categoria;
 import java.awt.Dimension;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.*;
 import java.util.List;
-import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import org.json.*;
 
-public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
+public class Gestion_Producto extends javax.swing.JInternalFrame {
 
-    public Gestion_Actualizacion_Producto() {
+    public Gestion_Producto() {
         initComponents();
         this.setTitle("Gestion de Productos");
         this.setSize(new Dimension(1230, 650));
@@ -38,7 +41,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
 
     private void cargarCategoriasEnComboBox() {
         // Crear instancia del controlador y de categorias
-        control_Cat_Proveedor controlCategoria = new control_Cat_Proveedor(null);
+        control_Cat_Proveedor controlCategoria = new control_Cat_Proveedor();
         List<Modelo_categoria> categorias = controlCategoria.getListaCategorias();
 
         // Agregar categorías al JComboBox
@@ -289,7 +292,7 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
     private void BotonBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBuscadorActionPerformed
         // Configurar la tabla antes de la consulta
         DefaultTableModel model = (DefaultTableModel) jTable_Producto.getModel();
-        model.setRowCount(0);  
+        model.setRowCount(0);
 
         String nombrePro = txtNombreProducto.getText().trim();
         Modelo_categoria categoriaSeleccionada = (Modelo_categoria) jComboCategoria.getSelectedItem();
@@ -306,41 +309,54 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
             return;
         }
 
-        // Verificar la conexión a la base de datos
-        try (Connection con = Conexion.Conexion_BD.conectar()) {
-            // Preparar la consulta SQL con parámetros
-            String sql = "SELECT Cod_Barra, nombre_Producto, tipo, categoria_id, precio_Actual "
-                    + "FROM Producto WHERE nombre_Producto LIKE ? AND categoria_id = ?";
-            try (PreparedStatement ps = con.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
-                ps.setString(1, "%" + nombrePro + "%");  // Buscar coincidencias parciales
-                ps.setInt(2, categoriaSeleccionada.getId());
+        // Realizar la solicitud a la API
+        try {
+            // Codificar el nombre del producto para evitar errores con espacios o caracteres especiales
+            String nombreProEncoded = URLEncoder.encode(nombrePro, "UTF-8");
 
-                // Ejecutar la consulta
-                try (ResultSet rs = ps.executeQuery()) {
-                    // Verificar si hay resultados
-                    if (!rs.next()) {
-                        JOptionPane.showMessageDialog(this, "No se encontraron productos que coincidan con los criterios.");
-                        return; // Salir si no se encuentran resultados
-                    }
+            // Modificar la URL para buscar con coincidencias parciales
+            String apiUrl = "http://localhost:8080/ApiRest/Prod/buscador?nombre=" + nombreProEncoded + "&categoriaId=" + categoriaSeleccionada.getId();
+            URL url = new URL(apiUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
 
-                    // Volver al inicio del ResultSet
-                    rs.beforeFirst();
-
-                    // Recorrer los resultados y agregarlos al modelo de la tabla
-                    while (rs.next()) {
-                        model.addRow(new Object[]{
-                            rs.getString("Cod_Barra"),
-                            rs.getString("nombre_Producto"),
-                            rs.getString("tipo"),
-                            rs.getInt("categoria_id"),
-                            rs.getDouble("precio_Actual")
-                        });
-                    }
-                }
+            // Leer la respuesta de la API
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error de búsqueda: verifique que el producto exista o que la categoría seleccionada sea la correcta.");
+
+            // Cerrar las conexiones
+            in.close();
+            con.disconnect();
+
+            // Parsear el JSON recibido
+            JSONArray productos = new JSONArray(content.toString());
+
+            // Verificar si hay resultados
+            if (productos.length() == 0) {
+                JOptionPane.showMessageDialog(this, "No se encontraron productos que coincidan con los criterios.");
+                return;
+            }
+
+            // Recorrer los resultados y agregarlos al modelo de la tabla
+            for (int i = 0; i < productos.length(); i++) {
+                JSONObject producto = productos.getJSONObject(i);
+                model.addRow(new Object[]{
+                    producto.getString("cod_barra"),
+                    producto.getString("nombre"),
+                    producto.getString("tipo"),
+                    producto.getInt("categoria_id"),
+                    producto.getDouble("precio_actual")
+                });
+
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error de búsqueda: " + e.getMessage());
         }
     }//GEN-LAST:event_BotonBuscadorActionPerformed
 
@@ -367,18 +383,15 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
 
     //Boton para la actualiizacion unitaria
     private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
-        // Verificar si se ha seleccionado una fila en la tabla
         int selectedRow = jTable_Producto.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un producto de la tabla para actualizar.");
             return;
         }
 
-        // Obtener el código del producto seleccionado (columna 0) y el nuevo precio desde el campo de texto
         String codigoProducto = jTable_Producto.getValueAt(selectedRow, 0).toString();
         String nuevoPrecioTexto = txtPrecioNuevo.getText();
 
-        // Validar que se haya ingresado un precio válido
         if (nuevoPrecioTexto.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese el nuevo precio.");
             return;
@@ -387,102 +400,174 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
         try {
             double nuevoPrecio = Double.parseDouble(nuevoPrecioTexto);
 
-            // Actualizar el precio en la base de datos y en la tabla
-            if (actualizarPrecioProducto(codigoProducto, nuevoPrecio)) {
-                jTable_Producto.setValueAt(nuevoPrecio, selectedRow, 4);  // Columna 4 para el precio
-                JOptionPane.showMessageDialog(this, "Precio actualizado correctamente.");
-            }
-            txtNombreProducto.setText("");
-            txtNombreSeleccionado.setText("");
-            txtPrecioNuevo.setText("");
-            txtPrecioActual.setText("");
-            limpiarTabla();
+            // Actualizar el precio a través de la API
+            String apiUrl = "http://localhost:8080/ApiRest/Prod/modificar-precio" + codigoProducto;
+            URL url = new URL(apiUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
 
-        } catch (NumberFormatException e) {
+            // Crear el cuerpo de la solicitud en JSON
+            String jsonInputString = "{\"precio_actual\": " + nuevoPrecio + "}";
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // Leer la respuesta de la API
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            in.close();
+            con.disconnect();
+
+            // Actualizar la tabla si la respuesta fue exitosa
+            jTable_Producto.setValueAt(nuevoPrecio, selectedRow, 4);
+            JOptionPane.showMessageDialog(this, "Precio actualizado correctamente.");
+            limpiarTabla();
+            txtNombreSeleccionado.setText("");
+            txtPrecioActual.setText("");
+            txtPrecioNuevo.setText("");
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Precio no válido.");
+            e.printStackTrace();
         }
     }//GEN-LAST:event_BotonActualizarActionPerformed
 
     //Boton para eliminar productos de tabla a la hora de actualizacion colectiva
     private void BotonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBorrarActionPerformed
-
         DefaultTableModel model = (DefaultTableModel) jTable_Producto.getModel();
 
-        // Verificar si se ha seleccionado una fila en la tabla
         int selectedRow = jTable_Producto.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminarlo de la 'Tabla'");
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminarlo de la tabla");
             return;
-
         }
-        model.removeRow(selectedRow);
 
+        model.removeRow(selectedRow);
     }//GEN-LAST:event_BotonBorrarActionPerformed
 
     //Boton de actualizacion colectiva
     private void BotonActualizarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarTodoActionPerformed
-
         if (txtPrecioNuevoColectiva.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese un nuevo precio antes de actualizar.");
-            return; // Salir del método si no hay valor en el campo de texto
+            return;
         }
 
-        // Sentencia sql y modelo de la tabla
-        String sqlUpdate = "UPDATE Producto SET precio_Actual = ? WHERE nombre_Producto LIKE ?";
         DefaultTableModel model = (DefaultTableModel) jTable_Producto.getModel();
+        double nuevoPrecio = Double.parseDouble(txtPrecioNuevoColectiva.getText());
 
-        try (Connection con = Conexion.Conexion_BD.conectar(); PreparedStatement pstUpdate = con.prepareStatement(sqlUpdate)) {
+        // Crear una lista para los productos a actualizar
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("[");
 
-            // Actualizar precios en la base de datos
-            for (int i = 0; i < model.getRowCount(); i++) {
-                // Obtener el nombre del producto y el nuevo precio del campo de texto
-                String nombreProducto = model.getValueAt(i, 1).toString();
-                double nuevoPrecio = Double.parseDouble(txtPrecioNuevoColectiva.getText());
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String nombreProducto = model.getValueAt(i, 1).toString();
 
-                // Configurar los parámetros de la consulta
-                pstUpdate.setDouble(1, nuevoPrecio);
-                pstUpdate.setString(2, "%" + nombreProducto + "%");
+            // Crear el objeto JSON para el producto
+            jsonBuilder.append("{")
+                    .append("\"nombreProducto\": \"").append(nombreProducto).append("\", ")
+                    .append("\"precioActual\": ").append(nuevoPrecio)
+                    .append("}");
 
-                // Ejecutar la consulta de actualización
-                pstUpdate.executeUpdate();
+            // Agregar una coma si no es el último producto
+            if (i < model.getRowCount() - 1) {
+                jsonBuilder.append(", ");
             }
+        }
+
+        jsonBuilder.append("]"); // Cerrar el arreglo JSON
+        String jsonInputString = jsonBuilder.toString();
+
+        // Enviar actualizaciones a la API
+        try {
+            // Configurar la conexión
+            URL url = new URL("http://localhost:8080/ApiRest/Prod/modificar-precio-colectivo");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+
+            // Enviar el JSON construido
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // Leer la respuesta de la API
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            StringBuilder content = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
 
             // Recargar los datos actualizados en la tabla
             recargarDatosEnTabla();
-
             JOptionPane.showMessageDialog(this, "Actualización Exitosa");
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "No se pudo realizar la actualización");
-            e.printStackTrace(); // Imprimir el stack trace para depuración
+            e.printStackTrace();
         }
-
     }//GEN-LAST:event_BotonActualizarTodoActionPerformed
 
     // Método para recargar los datos en la tabla
     private void recargarDatosEnTabla() {
-        String sqlSelect = "SELECT Cod_Barra, nombre_Producto, tipo, categoria_id, precio_Actual FROM Producto";
+        String apiUrl = "http://localhost:8080/ApiRest/Prod?updated=true";
         DefaultTableModel model = (DefaultTableModel) jTable_Producto.getModel();
 
-        try (Connection con = Conexion.Conexion_BD.conectar(); PreparedStatement pst = con.prepareStatement(sqlSelect); ResultSet rs = pst.executeQuery()) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // Verificar el código de respuesta
+            int responseCode = con.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
+            }
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            in.close();
+            con.disconnect();
+
+            // Parsear el JSON recibido
+            JSONArray productos = new JSONArray(content.toString());
 
             // Limpiar la tabla antes de volver a llenarla
             model.setRowCount(0);
 
             // Recorrer los resultados y agregarlos al modelo de la tabla
-            while (rs.next()) {
+            for (int i = 0; i < productos.length(); i++) {
+                JSONObject producto = productos.getJSONObject(i);
                 model.addRow(new Object[]{
-                    rs.getString("Cod_Barra"),
-                    rs.getString("nombre_Producto"),
-                    rs.getString("tipo"),
-                    rs.getInt("categoria_id"),
-                    rs.getDouble("precio_Actual")
+                    producto.getString("cod_barra"),
+                    producto.getString("nombre"),
+                    producto.getString("tipo"),
+                    producto.getInt("categoria_id"),
+                    producto.getDouble("precio_actual")
                 });
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar los datos");
-            e.printStackTrace(); // Imprimir el stack trace para depuración
+            e.printStackTrace();
         }
     }
 
@@ -490,22 +575,6 @@ public class Gestion_Actualizacion_Producto extends javax.swing.JInternalFrame {
     private void BotonLimpiarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonLimpiarTablaActionPerformed
         limpiarTabla();
     }//GEN-LAST:event_BotonLimpiarTablaActionPerformed
-
-    // Método para actualizar el precio del producto en la base de datos
-    private boolean actualizarPrecioProducto(String codigoProducto, double nuevoPrecio) {
-        String sql = "UPDATE Producto SET precio_Actual = ? WHERE Cod_Barra = ?";
-        try (Connection con = Conexion.Conexion_BD.conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setDouble(1, nuevoPrecio);
-            pst.setString(2, codigoProducto);
-            pst.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el producto: " + e.getMessage());
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonActualizar;

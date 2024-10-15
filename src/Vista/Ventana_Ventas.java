@@ -3,10 +3,14 @@ package Vista;
 //Importaciones
 import Controladores.control_Producto;
 import Controladores.control_Ventas;
+import Controladores.control_Cuenta;
 import Modelos.Modelo_Producto;
 import Modelos.Modelo_Venta;
+import Modelos.Modelo_Cuenta;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -22,6 +26,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         this.setSize(new Dimension(1100, 650));
 
         tablaDescripcionVenta.getTableHeader().setReorderingAllowed(false); //para bloquear las columnas del usuario
+        cargarCuentasComboBox();
 
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
@@ -38,7 +43,18 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         txtSubTotal.setEditable(false);
         control = new control_Producto();
     }
-    
+
+    private void cargarCuentasComboBox() {
+        control_Cuenta cont = new control_Cuenta();
+        List<Modelo_Cuenta> cuentas = cont.getListaCuentas();
+
+        jComboCuentas.removeAllItems();
+
+        for (Modelo_Cuenta cuenta : cuentas) {
+            jComboCuentas.addItem(cuenta);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -60,7 +76,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         jButtonLimpiar = new javax.swing.JButton();
         jBotonBuscar = new javax.swing.JButton();
         jBotonAnadir = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboCuentas = new javax.swing.JComboBox<>();
         BotonEliminar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -227,11 +243,16 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jBotonAnadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 117, 250, 30));
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 290, 190, 40));
+        jComboCuentas.setBackground(new java.awt.Color(255, 255, 255));
+        jComboCuentas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jComboCuentas.setForeground(new java.awt.Color(0, 0, 0));
+        jComboCuentas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        jComboCuentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboCuentasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jComboCuentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 290, 190, 40));
 
         BotonEliminar.setBackground(new java.awt.Color(255, 0, 0));
         BotonEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -281,33 +302,39 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
                 double montoProducto = precioProducto * cantidad;
 
                 switch (tipoProducto) {
-                    case "Kiosco" -> montoKiosco += montoProducto;
-                    case "Comida" -> montoComida += montoProducto;
-                    case "Panaderia" -> montoPanaderia += montoProducto;
-                    case "Dulce" -> montoDulce += montoProducto;
+                    case "Kiosco" ->
+                        montoKiosco += montoProducto;
+                    case "Comida" ->
+                        montoComida += montoProducto;
+                    case "Panaderia" ->
+                        montoPanaderia += montoProducto;
+                    case "Dulce" ->
+                        montoDulce += montoProducto;
                 }
                 montoTotal += montoProducto;
             }
 
-            if(montoTotal != 0){
+            if (montoTotal != 0) {
                 System.out.println("El monto es distinto de cero...");
             }
-            
+
             //formateo de datos
-            String hora = java.time.LocalDateTime.now().toString();
+            LocalDateTime hora = LocalDateTime.now();
             String detalle = (String) tipoPago.getSelectedItem();
+
+            // Verifica si tipoPago tiene un valor seleccionado
+            if (detalle == null || detalle.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Seleccione un tipo de pago");
+                return;
+            }
 
             if (montoTotal > 0) {
                 Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoDulce, montoTotal, hora, detalle);
 
-                if (venta.getId() != 0) {
+             // Verificar si la venta se registró correctamente
+                if(venta != null) {
                     JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
                     // Limpiar campos
-                    model.setRowCount(0);
-                    txtSubTotal.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error al registrar la venta");
-
                     model.setRowCount(0);
                     txtSubTotal.setText("");
                 }
@@ -352,7 +379,6 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     //metodo de busqueda para casos particulares
     private void jBotonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBotonBuscarActionPerformed
         //Instancias
-        Modelo_Producto pro = new Modelo_Producto();
         control_Producto cont = new control_Producto();
 
         //Verificamos tener el codigo de barra
@@ -419,7 +445,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBotonAnadirActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-        
+
         DefaultTableModel model = (DefaultTableModel) tablaDescripcionVenta.getModel();
 
         // Verificar si se ha seleccionado una fila en la tabla
@@ -431,6 +457,10 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         }
         model.removeRow(selectedRow);
     }//GEN-LAST:event_BotonEliminarActionPerformed
+
+    private void jComboCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboCuentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboCuentasActionPerformed
 
     //metodo privado, actulizacion del monto total de venta
     private void actualizarTotal() {
@@ -518,7 +548,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBotonAnadir;
     private javax.swing.JButton jBotonBuscar;
     private javax.swing.JButton jButtonLimpiar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Object> jComboCuentas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

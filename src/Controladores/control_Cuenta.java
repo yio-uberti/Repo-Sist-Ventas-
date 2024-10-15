@@ -1,97 +1,130 @@
 package Controladores;
 
 //Importaciones
-import java.util.List;
 import Modelos.Modelo_Cuenta;
-import java.sql.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import org.json.JSONException;
 
 public class control_Cuenta {
 
     private List<Modelo_Cuenta> listaCuenta;
+    private static final String BASE_URL_CUENTAS = "http://localhost:8080/ApiRest/Cuen";
+
 
     public control_Cuenta() {
-
-    }
-
-    public control_Cuenta(List<Modelo_Cuenta> listaCuenta) {
-        if (this.listaCuenta == null || this.listaCuenta.isEmpty()) {
-            this.listaCuenta = cargarCuentas();
-        }
+        this.listaCuenta = cargarCuentas();
     }
 
     private List<Modelo_Cuenta> cargarCuentas() {
         List<Modelo_Cuenta> lista = new ArrayList<>();
-        String sql = "SELECT id, nombreCuenta FROM Cuenta";
 
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql); ResultSet rs = pst.executeQuery()) {
+        try {
+            URL url = new URL(BASE_URL_CUENTAS);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-            while (rs.next()) {
-                Modelo_Cuenta cuenta = new Modelo_Cuenta();
-                cuenta.setId(rs.getInt("id"));
-                cuenta.setDescripcion(rs.getString("nombreCuenta"));
+            // Leer la respuesta
+            if (conn.getResponseCode() == 200) { // 200 OK
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
 
-                lista.add(cuenta);
+                JSONArray jsonArray = new JSONArray(response.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonCuenta = jsonArray.getJSONObject(i);
+                    Modelo_Cuenta cuenta = new Modelo_Cuenta();
+                    cuenta.setId(jsonCuenta.getInt("id"));
+                    cuenta.setDescripcion(jsonCuenta.getString("nombreCuenta"));
+                    lista.add(cuenta);
+                }
+
+                System.out.println("Carga exitosa de la tabla cuenta \n");
+            } else {
+                System.out.println("Error al cargar cuentas: " + conn.getResponseMessage());
             }
 
-            System.out.println("Carga exitosa de la tabla cuenta \n");
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Error al cargar las cuentas: " + e.getMessage());
         }
 
         return lista;
     }
 
-    public List<Modelo_Cuenta> getListaCuentas(){
-        if(listaCuenta == null || listaCuenta.isEmpty()){
+    public List<Modelo_Cuenta> getListaCuentas() {
+        if (listaCuenta == null || listaCuenta.isEmpty()) {
             listaCuenta = cargarCuentas();
         }
         return listaCuenta;
     }
-    
-     //Metodo para guardar categoria en base de datos
-    public boolean guardar(Modelo_Cuenta objeto) {
-        boolean respuesta = false;
-        Connection cn;
-        cn = Conexion.Conexion_BD.conectar();
-        try {
-            PreparedStatement consulta = cn.prepareStatement("insert into Cuenta values(?,?)");
-            consulta.setInt(1, objeto.getId());
-            consulta.setString(2, objeto.getDescripcion());
 
-            if (consulta.executeUpdate() > 0) {
-                respuesta = true;
+    // Método para guardar categoría en la base de datos
+    public boolean guardar(Modelo_Cuenta objeto) throws JSONException {
+        boolean respuesta = false;
+        String jsonInputString = new JSONObject()
+                .put("id", objeto.getId())
+                .put("nombre_cuenta", objeto.getDescripcion())
+                .toString();
+
+        try {
+            URL url = new URL(BASE_URL_CUENTAS);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            // Enviar la solicitud
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
             }
 
-            cn.close();
+            // Leer la respuesta
+            if (conn.getResponseCode() == 201) { // 201 Created
+                respuesta = true;
+                System.out.println("Cuenta guardada con éxito.");
+            } else {
+                System.out.println("Error al guardar cuenta: " + conn.getResponseMessage());
+            }
 
         } catch (Exception e) {
-            System.out.println("Error al guardar cuenta: " + e);
+            System.out.println("Error al guardar cuenta: " + e.getMessage());
         }
         return respuesta;
     }
-    
-    //metodo para eliminar categorias de la Gestion de Categorias 
+
+    // Método para eliminar cuentas
     public boolean eliminar(int idCuenta) {
         boolean respuesta = false;
-        Connection cn = Conexion.Conexion_BD.conectar();
 
         try {
-            PreparedStatement consulta = cn.prepareStatement("delete from Cuenta where id ='" + idCuenta + "'");
-            consulta.executeUpdate();
+            URL url = new URL(BASE_URL_CUENTAS + "/" + idCuenta); // Suponiendo que la API tiene un endpoint para eliminar por ID
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
 
-            if (consulta.executeUpdate() > 0) {
+            // Leer la respuesta
+            if (conn.getResponseCode() == 204) { // 204 No Content
                 respuesta = true;
+                System.out.println("Cuenta eliminada con éxito.");
+            } else {
+                System.out.println("Error al eliminar cuenta: " + conn.getResponseMessage());
             }
 
-            cn.close();
-
         } catch (Exception e) {
-            System.out.println("Error al eliminar categoria" + e);
+            System.out.println("Error al eliminar cuenta: " + e.getMessage());
         }
 
         return respuesta;
     }
-    
+
 }

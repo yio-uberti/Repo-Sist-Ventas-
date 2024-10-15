@@ -1,170 +1,231 @@
 package Controladores;
 
 import Modelos.Modelo_Producto;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.*;
 
 public class control_Producto {
 
     private List<Modelo_Producto> listaProductos;
+    private static final String BASE_URL_PRODUCTOS = "http://localhost:8080/ApiRest/Prod";
 
     public control_Producto() {
-        if(this.listaProductos == null || this.listaProductos.isEmpty()){
+        if (this.listaProductos == null || this.listaProductos.isEmpty()) {
             this.listaProductos = cargarProductos();
         }
     }
 
+    // Método para hacer una petición GET a la API y cargar los productos
     private List<Modelo_Producto> cargarProductos() {
         List<Modelo_Producto> productos = new ArrayList<>();
-        String sql = "SELECT Cod_Barra, nombre_Producto, precio_Actual, tipo, categoria_id FROM Producto";
+        try {
+            URL url = new URL(BASE_URL_PRODUCTOS); // Ajusta el endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
 
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql); ResultSet rs = pst.executeQuery()) {
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Error HTTP: " + conn.getResponseCode());
+            }
 
-            while (rs.next()) {
-                Modelo_Producto producto = new Modelo_Producto();
-                producto.setCod_barra(rs.getString("Cod_Barra"));
-                producto.setNombre(rs.getString("nombre_Producto"));
-                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
-                producto.setTipo(rs.getString("tipo"));
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+            String output;
+            StringBuilder jsonResponse = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                jsonResponse.append(output);
+            }
+
+            // Parsear el JSON de respuesta
+            JSONArray jsonArray = new JSONArray(jsonResponse.toString());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+                Modelo_Producto producto = new Modelo_Producto(
+                        jsonObj.getString("cod_barra"),
+                        jsonObj.getString("nombre"),
+                        jsonObj.getString("tipo"),
+                        jsonObj.getInt("categoria_id"),
+                        jsonObj.getDouble("precio_actual")
+                );
                 productos.add(producto);
             }
-            System.out.println("Carga exitosa de la tabla \n");
-        } catch (SQLException e) {
+            conn.disconnect();
+        } catch (Exception e) {
             System.out.println("Error al cargar productos: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return productos;
     }
 
     public Modelo_Producto buscarProductoPorCodigo(String codigoBarra) {
-        for (Modelo_Producto producto : listaProductos) {
-            if (producto.getCod_barra().equals(codigoBarra)) {
-                return producto;
-            }
-        }
-        return null; // Si no se encuentra el producto
-    }
-
-    //Metodo para guardar producto
-    public boolean guardar(Modelo_Producto objeto) {
-
-        boolean respuesta = false;
-        Connection cn;
-        cn = Conexion.Conexion_BD.conectar();
-
+        Modelo_Producto producto = null;
         try {
-            PreparedStatement consulta = cn.prepareStatement("insert into Producto values(?,?,?,?,?)");
-            consulta.setString(1, objeto.getCod_barra());//Cod_Barra
-            consulta.setString(2, objeto.getNombre());
-            consulta.setString(3, objeto.getTipo());
-            consulta.setInt(4, objeto.getCategoria());
-            consulta.setDouble(5, objeto.getPrecio_Actual());
+            URL url = new URL("http://localhost:8080/ApiRest/Prod/producto/" + codigoBarra); // Ajusta el endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
 
-            if (consulta.executeUpdate() > 0) {
-                respuesta = true;
-            }
-            cn.close();
-
-        } catch (SQLException e) {
-            System.out.println("Error al guardar producto " + e);
-        }
-
-        return respuesta;
-    }
-
-    //Metodo para saber si existe un Producto
-    public boolean existeProducto(String codigoBarra) {
-
-        boolean respuesta = false;
-        String sql = "select Cod_Barra from Producto where Cod_Barra = '" + codigoBarra + "'; ";
-        Statement st;
-
-        try {
-            Connection cn = Conexion.Conexion_BD.conectar();
-            st = cn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-                respuesta = true;
+            if (conn.getResponseCode() != 200) {
+                return null; // Si no se encuentra el producto
             }
 
-        } catch (SQLException e) {
-            System.out.println("Error al consultar Producto " + e);
-        }
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-        if (respuesta == true) {
-            System.out.println("producto encontrado");
+            String output;
+            StringBuilder jsonResponse = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                jsonResponse.append(output);
+            }
+
+            // Parsear el JSON de respuesta
+            JSONObject jsonObj = new JSONObject(jsonResponse.toString());
+            producto = new Modelo_Producto(
+                    jsonObj.getString("cod_barra"),
+                    jsonObj.getString("nombre"),
+                    jsonObj.getString("tipo"),
+                    jsonObj.getInt("categoria_id"),
+                    jsonObj.getDouble("precio_actual")
+            );
+
+            conn.disconnect();
+        } catch (Exception e) {
+            System.out.println("Error al buscar producto: " + e.getMessage());
         }
-        return respuesta;
+        return producto;
     }
 
-    //metodo para buscar un producto 
     public Modelo_Producto buscarProductoUno(String codigoBarra) {
         Modelo_Producto producto = null;
-        String sql = "SELECT nombre_Producto, precio_Actual, tipo, categoria_id FROM Producto WHERE Cod_Barra = ?";
+        String url = BASE_URL_PRODUCTOS + codigoBarra; // Cambia la URL según tu API
 
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
+        try {
+            // Crear el objeto de la conexión HTTP
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
 
-            pst.setString(1, codigoBarra);
-            ResultSet rs = pst.executeQuery();
+            int responseCode = con.getResponseCode();
 
-            if (rs.next()) {
+            if (responseCode == HttpURLConnection.HTTP_OK) { // Verificar que la respuesta sea 200 OK
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                // Convertir la respuesta a JSON
+                JSONObject jsonResponse = new JSONObject(response.toString());
+
+                // Asignar valores a la instancia de Modelo_Producto
                 producto = new Modelo_Producto();
-                producto.setNombre(rs.getString("nombre_Producto"));
-                producto.setPrecio_Actual(rs.getDouble("precio_Actual"));
-                producto.setTipo(rs.getString("tipo"));
-                producto.setCategoria(rs.getInt("categoria_id"));
+                producto.setNombre(jsonResponse.getString("nombre_Producto"));
+                producto.setPrecio_Actual(jsonResponse.getDouble("precio_actual"));
+                producto.setTipo(jsonResponse.getString("tipo"));
+                producto.setCategoria(jsonResponse.getInt("categoria_id"));
+
+            } else {
+                System.out.println("Error en la consulta: Código de respuesta " + responseCode);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
         }
         return producto;
     }
 
-    //Metodo de actualizacion de producto
-    public Modelo_Producto cambioPrecio(String codigoBarra, double precioNuevo) {
-        Modelo_Producto producto = new Modelo_Producto();
-        String sql = "update Producto set precio_Actual = ? WHERE Cod_barra = ?";
+    // Método para guardar producto (POST)
+    public boolean guardar(Modelo_Producto objeto) {
+        try {
+            URL url = new URL(BASE_URL_PRODUCTOS); // Ajusta el endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
 
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
-            pst.setDouble(1, precioNuevo);
-            pst.setString(2, codigoBarra);
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("cod_barra", objeto.getCod_barra());
+            jsonObj.put("nombre", objeto.getNombre());
+            jsonObj.put("tipo", objeto.getTipo());
+            jsonObj.put("categoria_id", objeto.getCategoria());
+            jsonObj.put("precio_actual", objeto.getPrecio_Actual());
 
-            int filasAfectadas = pst.executeUpdate();
-            if (filasAfectadas > 0) {
-                producto.setPrecio_Actual(precioNuevo);
+            OutputStream os = conn.getOutputStream();
+            os.write(jsonObj.toString().getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != 200) {
+                return false;
             }
-
-        } catch (SQLException e) {
-            System.out.println("Error al consultar Producto por código de barras: " + e.getMessage());
-        }
-
-        return producto;
-    }
-
-    public boolean eliminar(String codigoBarra) {
-
-        Modelo_Producto producto = new Modelo_Producto();
-        String sql = "delete from Producto where Cod_Barra = ?";
-
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql)) {
-
-            pst.setString(1, codigoBarra);
-            int rowsAffected = pst.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            System.out.println("Error al eliminar Producto por código de barras: " + e.getMessage());
+            conn.disconnect();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error al guardar producto: " + e.getMessage());
             return false;
         }
-
     }
-    
-    
-    
-    
+
+    // Método para verificar si el producto existe (GET)
+    public boolean existeProducto(String codigoBarra) {
+        return buscarProductoPorCodigo(codigoBarra) != null;
+    }
+
+    // Método para actualizar el precio de un producto (PUT)
+    public Modelo_Producto cambioPrecio(String codigoBarra, double precioNuevo) {
+        Modelo_Producto producto = buscarProductoPorCodigo(codigoBarra);
+        if (producto == null) {
+            return null; // Producto no encontrado
+        }
+
+        try {
+            URL url = new URL(BASE_URL_PRODUCTOS + codigoBarra); // Ajusta el endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("precio_actual", precioNuevo);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(jsonObj.toString().getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != 200) {
+                return null;
+            }
+
+            producto.setPrecio_Actual(precioNuevo);
+            conn.disconnect();
+        } catch (Exception e) {
+            System.out.println("Error al cambiar el precio: " + e.getMessage());
+        }
+        return producto;
+    }
+
+    // Método para eliminar un producto (DELETE)
+    public boolean eliminar(String codigoBarra) {
+        try {
+            URL url = new URL(BASE_URL_PRODUCTOS + codigoBarra); // Ajusta el endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+
+            if (conn.getResponseCode() != 200) {
+                return false;
+            }
+            conn.disconnect();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error al eliminar producto: " + e.getMessage());
+            return false;
+        }
+    }
 }

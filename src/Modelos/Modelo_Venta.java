@@ -1,10 +1,13 @@
 package Modelos;
 
+import java.time.LocalDateTime;
+
 public class Modelo_Venta {
     
     private int id;
     private String Tipo;
-    private String Hora;
+    private LocalDateTime Hora;
+    private int Cuenta;
     private double montoKiosco;
     private double montoComida;
     private double montoPanaderia;
@@ -27,11 +30,11 @@ public class Modelo_Venta {
         this.Tipo = Tipo;
     }
 
-    public String getHora() {
+    public LocalDateTime getHora() {
         return Hora;
     }
 
-    public void setHora(String Hora) {
+    public void setHora(LocalDateTime Hora) {
         this.Hora = Hora;
     }
 
@@ -73,6 +76,14 @@ public class Modelo_Venta {
 
     public void setMontoDulce(double montoPostre) {
         this.montoDulce = montoPostre;
+    }
+
+    public int getCuenta() {
+        return Cuenta;
+    }
+
+    public void setCuenta(int Cuenta) {
+        this.Cuenta = Cuenta;
     }
     
     

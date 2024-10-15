@@ -1,42 +1,61 @@
 package Controladores;
 
+//importanciones
 import Modelos.Modelo_categoria;
-import java.sql.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONException;
 
 public class control_Cat_Proveedor {
 
     private List<Modelo_categoria> listaCategoria;
+    private static final String BASE_URL = "http://localhost:8080/ApiRest/Cate";
 
-    public control_Cat_Proveedor(){
-    
-    }
-    
-    public control_Cat_Proveedor(List<Modelo_categoria> listaCategoria) {
-        if (this.listaCategoria == null || this.listaCategoria.isEmpty()) {
-            this.listaCategoria = cargarCategorias();
-        }
+    public control_Cat_Proveedor() {
+        this.listaCategoria = cargarCategorias();
     }
 
     private List<Modelo_categoria> cargarCategorias() {
         List<Modelo_categoria> lista = new ArrayList<>();
-        String sql = "SELECT id, nombre_Categoria FROM Categoria";
 
-        try (Connection cn = Conexion.Conexion_BD.conectar(); PreparedStatement pst = cn.prepareStatement(sql); ResultSet rs = pst.executeQuery()) {
+        try {
+            URL url = new URL(BASE_URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-            while (rs.next()) {
-                Modelo_categoria categoria = new Modelo_categoria();
-                categoria.setId(rs.getInt("id"));
-                categoria.setDescripcion(rs.getString("nombre_Categoria"));
+            // Leer la respuesta
+            if (conn.getResponseCode() == 200) { // 200 OK
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
 
-                lista.add(categoria);
+                JSONArray jsonArray = new JSONArray(response.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonCategoria = jsonArray.getJSONObject(i);
+                    Modelo_categoria categoria = new Modelo_categoria();
+                    categoria.setId(jsonCategoria.getInt("id"));
+                    categoria.setDescripcion(jsonCategoria.getString("nombre_categoria"));
+                    lista.add(categoria);
+                }
+
+                System.out.println("Carga exitosa de la tabla categoria \n");
+            } else {
+                System.out.println("Error al cargar categorias: " + conn.getResponseMessage());
             }
 
-            System.out.println("Carga exitosa de la tabla categoria \n");
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Error al cargar las categorias: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return lista;
@@ -49,45 +68,60 @@ public class control_Cat_Proveedor {
         return listaCategoria;
     }
 
-    //Metodo para guardar categoria en base de datos
-    public boolean guardar(Modelo_categoria objeto) {
+    // Método para guardar categoría en la base de datos
+    public boolean guardar(Modelo_categoria objeto) throws JSONException {
         boolean respuesta = false;
-        Connection cn;
-        cn = Conexion.Conexion_BD.conectar();
-        try {
-            PreparedStatement consulta = cn.prepareStatement("insert into Categoria values(?,?)");
-            consulta.setInt(1, objeto.getId());
-            consulta.setString(2, objeto.getDescripcion());
+        String jsonInputString = new JSONObject()
+                .put("id", objeto.getId())
+                .put("nombre_categoria", objeto.getDescripcion())
+                .toString();
 
-            if (consulta.executeUpdate() > 0) {
-                respuesta = true;
+        try {
+            URL url = new URL(BASE_URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            // Enviar la solicitud
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
             }
 
-            cn.close();
+            // Leer la respuesta
+            if (conn.getResponseCode() == 201) {
+                respuesta = true;
+                System.out.println("Categoría guardada con éxito.");
+            } else {
+                System.out.println("Error al guardar categoria: " + conn.getResponseMessage());
+            }
 
         } catch (Exception e) {
-            System.out.println("Error al guardar categoria: " + e);
+            System.out.println("Error al guardar categoria: " + e.getMessage());
         }
         return respuesta;
     }
 
-    //metodo para eliminar categorias de la Gestion de Categorias 
+    // Método para eliminar categorias
     public boolean eliminar(int idCategoria) {
         boolean respuesta = false;
-        Connection cn = Conexion.Conexion_BD.conectar();
 
         try {
-            PreparedStatement consulta = cn.prepareStatement("delete from Categoria where id ='" + idCategoria + "'");
-            consulta.executeUpdate();
+            URL url = new URL(BASE_URL + "/" + idCategoria); // Suponiendo que la API tiene un endpoint para eliminar por ID
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
 
-            if (consulta.executeUpdate() > 0) {
+            // Leer la respuesta
+            if (conn.getResponseCode() == 204) { // 204 No Content
                 respuesta = true;
+                System.out.println("Categoría eliminada con éxito.");
+            } else {
+                System.out.println("Error al eliminar categoria: " + conn.getResponseMessage());
             }
 
-            cn.close();
-
         } catch (Exception e) {
-            System.out.println("Error al eliminar categoria" + e);
+            System.out.println("Error al eliminar categoria: " + e.getMessage());
         }
 
         return respuesta;
