@@ -49,6 +49,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
         List<Modelo_Cuenta> cuentas = cont.getListaCuentas();
 
         jComboCuentas.removeAllItems();
+        jComboCuentas.addItem("Seleccionar...");
 
         for (Modelo_Cuenta cuenta : cuentas) {
             jComboCuentas.addItem(cuenta);
@@ -321,18 +322,26 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             //formateo de datos
             LocalDateTime hora = LocalDateTime.now();
             String detalle = (String) tipoPago.getSelectedItem();
-
+            Modelo_Cuenta cuentaSeleccionada = (Modelo_Cuenta) jComboCuentas.getSelectedItem();
+            int id = 0;
+            
+            
             // Verifica si tipoPago tiene un valor seleccionado
             if (detalle == null || detalle.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Seleccione un tipo de pago");
                 return;
             }
 
-            if (montoTotal > 0) {
-                Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoDulce, montoTotal, hora, detalle);
+            if (cuentaSeleccionada != null) {
+                id = cuentaSeleccionada.getId();  // Suponiendo que tienes un método getId() en Modelo_Cuenta
+                System.out.println("ID seleccionado: " + id);
+            }
 
-             // Verificar si la venta se registró correctamente
-                if(venta != null) {
+            if (montoTotal > 0) {
+                Modelo_Venta venta = cont.registrarVenta(montoKiosco, montoComida, montoPanaderia, montoDulce, montoTotal, hora, detalle, id);
+
+                // Verificar si la venta se registró correctamente
+                if (venta != null) {
                     JOptionPane.showMessageDialog(this, "Venta registrada con éxito");
                     // Limpiar campos
                     model.setRowCount(0);

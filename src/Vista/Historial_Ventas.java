@@ -1,6 +1,7 @@
 package Vista;
 
-import Controladores.control_Ventas;
+import Controladores.control_Cuenta;
+import Modelos.Modelo_Cuenta;
 import Modelos.Modelo_Venta;
 import java.awt.*;
 import javax.swing.JDesktopPane;
@@ -26,8 +27,10 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
     public Historial_Ventas() {
 
         initComponents();
-        this.setTitle("Historial de Ventas");
+        this.setTitle("Historial de Ventas del dia actual");
         this.setSize(new Dimension(1290, 650));
+
+        cargarCuentasComboBox();
 
         // Centrar el JInternalFrame en su contenedor principal
         SwingUtilities.invokeLater(new Runnable() {
@@ -47,6 +50,19 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         txtTotalGeneral.setEditable(false);
         txtEfectivo.setEditable(false);
         txtTransferencia.setEditable(false);
+    }
+
+    private void cargarCuentasComboBox() {
+        control_Cuenta cont = new control_Cuenta();
+        List<Modelo_Cuenta> cuentas = cont.getListaCuentas();
+
+        jComboCuenta.removeAllItems();
+
+        jComboCuenta.addItem("Seleccionar...");
+
+        for (Modelo_Cuenta cuenta : cuentas) {
+            jComboCuenta.addItem(cuenta);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -74,7 +90,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         txtComida = new javax.swing.JTextField();
         txtPanaderia = new javax.swing.JTextField();
         txtDulce = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboCuenta = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -94,7 +110,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(titBuscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jBotonBuscarPago.setBackground(new java.awt.Color(0, 153, 255));
-        jBotonBuscarPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jBotonBuscarPago.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jBotonBuscarPago.setForeground(new java.awt.Color(0, 0, 0));
         jBotonBuscarPago.setText("Buscar ");
         jBotonBuscarPago.addActionListener(new java.awt.event.ActionListener() {
@@ -165,7 +181,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 950, 500));
 
         BotonGeneral.setBackground(new java.awt.Color(102, 204, 255));
-        BotonGeneral.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BotonGeneral.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         BotonGeneral.setForeground(new java.awt.Color(0, 0, 0));
         BotonGeneral.setText("Busqueda General");
         BotonGeneral.addActionListener(new java.awt.event.ActionListener() {
@@ -173,7 +189,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
                 BotonGeneralActionPerformed(evt);
             }
         });
-        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 20, 160, 60));
+        getContentPane().add(BotonGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 270, 60));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -192,7 +208,7 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 40, 160, 40));
 
         jBotonBuscarFecha.setBackground(new java.awt.Color(0, 153, 255));
-        jBotonBuscarFecha.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jBotonBuscarFecha.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jBotonBuscarFecha.setForeground(new java.awt.Color(0, 0, 0));
         jBotonBuscarFecha.setText("Buscar");
         jBotonBuscarFecha.addActionListener(new java.awt.event.ActionListener() {
@@ -275,10 +291,16 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txtDulce, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 550, 150, 40));
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 40, 230, 40));
+        jComboCuenta.setBackground(new java.awt.Color(255, 255, 255));
+        jComboCuenta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jComboCuenta.setForeground(new java.awt.Color(0, 0, 0));
+        jComboCuenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
+        jComboCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboCuentaActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jComboCuenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 40, 230, 40));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -662,12 +684,16 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDulceActionPerformed
 
+    private void jComboCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboCuentaActionPerformed
+
+    }//GEN-LAST:event_jComboCuentaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonGeneral;
     private javax.swing.JButton jBotonBuscarFecha;
     private javax.swing.JButton jBotonBuscarPago;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Object> jComboCuenta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

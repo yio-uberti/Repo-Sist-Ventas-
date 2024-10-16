@@ -14,11 +14,11 @@ import java.util.List;
 import org.json.JSONException;
 
 public class control_Ventas {
-
+//Agregar el atributo id de las cuentas en el BD las ventas
     private static final String BASE_URL_VENTAS = "http://localhost:8080/ApiRest/Ven";
 
     // Método para registrar una venta
-    public Modelo_Venta registrarVenta(double montoKiosco, double montoComida, double montoPanaderia, double montoDulce, double montoTotal, LocalDateTime hora, String detalle) throws JSONException {
+    public Modelo_Venta registrarVenta(double montoKiosco, double montoComida, double montoPanaderia, double montoDulce, double montoTotal, LocalDateTime hora, String detalle, int idCuenta) throws JSONException {
         Modelo_Venta venta = new Modelo_Venta();
         String jsonInputString = new JSONObject()
                 .put("detalle", detalle)
@@ -28,6 +28,7 @@ public class control_Ventas {
                 .put("monto_postre", montoDulce)
                 .put("monto_total", montoTotal)
                 .put("hora_venta", hora)
+                .put("idcuenta", idCuenta)
                 .toString();
 
         try {

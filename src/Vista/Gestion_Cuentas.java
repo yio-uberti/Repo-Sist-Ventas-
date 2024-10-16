@@ -167,9 +167,9 @@ public class Gestion_Cuentas extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 370, 280));
 
         txtNuevoNombre.setBackground(new java.awt.Color(255, 255, 255));
-        txtNuevoNombre.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNuevoNombre.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         txtNuevoNombre.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(txtNuevoNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 110, 180, 30));
+        getContentPane().add(txtNuevoNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 110, 180, 40));
 
         titSeleccion1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         titSeleccion1.setForeground(new java.awt.Color(0, 0, 0));
@@ -256,9 +256,9 @@ public class Gestion_Cuentas extends javax.swing.JInternalFrame {
 
                 // Conectar a la API y enviar la actualización
                 try {
-                    URL url = new URL("http://localhost:8080/ApiRest/Cuen/" + idCuentas);  // URL de tu API
+                    URL url = new URL("http://localhost:8080/ApiRest/Cuen/modificar/" + idCuentas);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("PUT");  // Usamos PUT para actualizar
+                    con.setRequestMethod("PUT");
                     con.setRequestProperty("Content-Type", "application/json");
                     con.setDoOutput(true);
 
@@ -266,7 +266,7 @@ public class Gestion_Cuentas extends javax.swing.JInternalFrame {
                     JSONObject cuentaJson = new JSONObject();
                     cuentaJson.put("nombreCuenta", nuevoNombre);
 
-                    // Enviar los datos JSON a la API
+                    // Envía el objeto a la API
                     try (OutputStream os = con.getOutputStream()) {
                         byte[] input = cuentaJson.toString().getBytes("utf-8");
                         os.write(input, 0, input.length);
@@ -276,13 +276,15 @@ public class Gestion_Cuentas extends javax.swing.JInternalFrame {
                     int responseCode = con.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         JOptionPane.showMessageDialog(null, "Nombre de cuenta actualizado con éxito");
-                        txtNuevoNombre.setText("");  // Limpiar el campo de texto
+                        txtNuevoNombre.setText("");
                         this.cargarCuentas(); // Recargar la tabla para mostrar los cambios
                     } else {
                         JOptionPane.showMessageDialog(null, "Error al actualizar la cuenta. Código de respuesta: " + responseCode);
+                        System.out.println(responseCode);
                     }
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Error al conectarse a la API: " + e.getMessage());
                 }
 
