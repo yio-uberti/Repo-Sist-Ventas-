@@ -333,7 +333,7 @@ public class Ventana_Ventas extends javax.swing.JInternalFrame {
             }
 
             if (cuentaSeleccionada != null) {
-                id = cuentaSeleccionada.getId();  // Suponiendo que tienes un método getId() en Modelo_Cuenta
+                id = cuentaSeleccionada.getId();
                 System.out.println("ID seleccionado: " + id);
             }
 

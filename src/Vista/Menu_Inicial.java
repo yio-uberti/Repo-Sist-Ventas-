@@ -47,6 +47,7 @@ public class Menu_Inicial extends javax.swing.JFrame {
         Modificar_Producto = new javax.swing.JMenuItem();
         jMenuHistorial = new javax.swing.JMenu();
         Ver_Historial = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuFacturacion = new javax.swing.JMenu();
         menuIngresoVentas = new javax.swing.JMenuItem();
         jMenuCategoria = new javax.swing.JMenu();
@@ -97,13 +98,23 @@ public class Menu_Inicial extends javax.swing.JFrame {
         jMenuHistorial.setPreferredSize(new java.awt.Dimension(150, 50));
 
         Ver_Historial.setForeground(new java.awt.Color(0, 0, 0));
-        Ver_Historial.setText("Ver Historial");
+        Ver_Historial.setText("Ver Historial Actual");
         Ver_Historial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Ver_HistorialActionPerformed(evt);
             }
         });
         jMenuHistorial.add(Ver_Historial);
+
+        jMenuItem1.setBackground(new java.awt.Color(0, 0, 0));
+        jMenuItem1.setForeground(new java.awt.Color(0, 0, 0));
+        jMenuItem1.setText("Ver Historial Anteriores");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenuHistorial.add(jMenuItem1);
 
         jMenuBarra.add(jMenuHistorial);
 
@@ -208,6 +219,10 @@ public class Menu_Inicial extends javax.swing.JFrame {
         gCuentas.setVisible(true);
     }//GEN-LAST:event_ALtaGestionCuentaActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -252,6 +267,7 @@ public class Menu_Inicial extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuCuentas;
     private javax.swing.JMenu jMenuFacturacion;
     private javax.swing.JMenu jMenuHistorial;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu jMenuProducto;
     private javax.swing.JMenuItem menuIngresoVentas;
     // End of variables declaration//GEN-END:variables

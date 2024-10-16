@@ -452,9 +452,18 @@ public class Historial_Ventas extends javax.swing.JInternalFrame {
         // Formateamos la fecha
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormat.format(new Date());
+        Modelo_Cuenta cuentaSeleccionada = (Modelo_Cuenta) jComboCuenta.getSelectedItem();
+        int id = 0;
+
+        if (cuentaSeleccionada != null) {
+            id = cuentaSeleccionada.getId();
+            System.out.println("ID seleccionado: " + id);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione una cuenta");
+        }
 
         // URL de tu API que devuelve las ventas del día
-        String urlAPI = "http://localhost:8080/ApiRest/Ven/por-fecha?fecha=" + fechaActual;
+        String urlAPI = "http://localhost:8080/ApiRest/Ven/por-fecha-y-cuenta?fecha=" + fechaActual + "&id=" + id;
 
         DefaultTableModel model = new DefaultTableModel();
 
