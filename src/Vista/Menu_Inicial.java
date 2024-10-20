@@ -220,7 +220,9 @@ public class Menu_Inicial extends javax.swing.JFrame {
     }//GEN-LAST:event_ALtaGestionCuentaActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        Historial_Anterior historial = new Historial_Anterior();
+        jDesktopPane_menu.add(historial);
+        historial.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public static void main(String args[]) {
